@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curated By Mami L — Timeless Elegance, Curated for You</title>
+<meta name="description" content="Every bag in our catalog is in stock and ready to ship. Choose yours, then chat with us on WhatsApp to reserve it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* ---- Home-only layout ---- */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 22px;
+    padding: 88px 24px 104px;
+    background-color: var(--cream-warm);
+  }
+  .hero__logo {
+    width: 250px;
+    height: 250px;
+    object-fit: contain;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .hero p {
+    max-width: 520px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--stone);
+    text-wrap: pretty;
+  }
+  .hero .btn-primary { margin-top: 10px; }
+
+  .styles { padding: 84px 48px 92px; }
+  .styles__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .style-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--espresso);
+  }
+  .style-card:hover { color: var(--gold-dk); }
+  .style-card__label {
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 17px;
+  }
+
+  /* Home's footer is a touch taller than the other pages' */
+  .footer__lede { margin-bottom: 28px; }
+  /* min-width so this doesn't outrank the shared mobile footer padding */
+  @media (min-width: 901px) {
+    .footer { padding-top: 68px; }
+  }
+
+  @media (max-width: 900px) {
+    .hero { padding: 56px 20px 68px; }
+    .hero h1 { font-size: 34px; }
+    .hero__logo { width: 180px; height: 180px; }
+    .styles { padding: 56px 20px 64px; }
+    .styles__grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body data-wa-message="Hello Curated By Mami L, I'd like to ask about a bag from your catalog.">
+
+  <header class="header">
+    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — home">
+      <img src="assets/logo.png" alt="Curated By Mami L">
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero__logo" src="assets/logo.png" alt="Curated By Mami L">
+      <h1>Timeless Elegance, Curated for You</h1>
+      <p>Every bag in our catalog is in stock and ready to ship. Choose yours, then chat with us on WhatsApp to reserve it.</p>
+      <a class="btn-primary" href="catalog.html">Explore Collection</a>
+    </section>
+
+    <section class="styles">
+      <h2 class="section-title">Shop by Style</h2>
+      <div class="styles__grid">
+        <a class="style-card" href="collections.html">
+          <div class="image-slot">Totes collection photo</div>
+          <div class="style-card__label">Totes</div>
+        </a>
+        <a class="style-card" href="collections.html">
+          <div class="image-slot">Crossbody collection photo</div>
+          <div class="style-card__label">Crossbody</div>
+        </a>
+        <a class="style-card" href="collections.html">
+          <div class="image-slot">Clutches collection photo</div>
+          <div class="style-card__label">Clutches</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="how">
+      <h2 class="section-title">How to Order</h2>
+      <div class="how__grid">
+        <div>
+          <div class="how__num">01</div>
+          <div class="how__step">Browse the catalog</div>
+          <p>Filter by style or search by name. Everything shown is in stock.</p>
+        </div>
+        <div>
+          <div class="how__num">02</div>
+          <div class="how__step">Tap to order</div>
+          <p>WhatsApp opens with the bag and price already written for you.</p>
+        </div>
+        <div>
+          <div class="how__num">03</div>
+          <div class="how__step">We hold it for you</div>
+          <p>Confirm payment and delivery in the chat. Each bag is reserved 24 hours.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <h2>Stay in the Loop</h2>
+    <p class="footer__lede">Be the first to know about new arrivals and exclusive offers.</p>
+    <form class="signup" action="#" method="post">
+      <input id="email" name="email" type="email" aria-label="Your email address" placeholder="Your email address" autocomplete="email" required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footer__legal">
+      © 2026 Curated By Mami L. All rights reserved. ·
+      <a class="js-wa" href="#" target="_blank" rel="noopener">WhatsApp us</a>
+    </div>
+  </footer>
+
+  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener">Chat with us</a>
+
+<script type="module" src="assets/firebase.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

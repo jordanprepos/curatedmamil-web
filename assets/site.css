@@ -1,0 +1,347 @@
+/* ============================================================
+   Curated By Mami L — shared site styles
+   Chrome used by every page: tokens, header, footer, buttons,
+   image placeholders, floating WhatsApp pill.
+   Page-specific layout lives in each page's own <style> block,
+   which loads after this file and so wins on equal specificity.
+   ============================================================ */
+
+/* ---- Design tokens (from the Curated By Mami L design) ---- */
+:root {
+  --cream:      #FDFBF7;
+  --cream-warm: #FCF7F2;
+  --sand:       #F3E8DC;
+  --line:       #EFE3D4;
+  --espresso:   #3A2A1E;
+  --espresso-2: #58412F;
+  --bark:       #5A4433;
+  --taupe:      #6B5744;
+  --stone:      #7A6752;
+  --mist:       #9C8770;
+  --linen:      #C9B7A2;
+  --gold:       #C9A063;
+  --gold-lt:    #D9B47B;
+  --gold-dk:    #B8894B;
+  --placeholder:#B9A794;
+  --border-soft:#E3D2BE;
+  --price:      #C08B4A;
+  --heart:      #D8C6B2;
+  --muted:      #8A7660;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: Jost, system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--espresso);
+  font-family: var(--sans);
+  min-height: 100vh;
+}
+
+a { color: var(--gold-dk); text-decoration: none; }
+a:hover { color: var(--espresso); }
+::placeholder { color: var(--placeholder); }
+img { max-width: 100%; }
+
+/* ---- Header ---- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 48px;
+  background: rgba(253, 251, 247, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.header__logo img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 50%;
+  display: block;
+}
+.nav {
+  display: flex;
+  gap: 34px;
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.nav a { color: var(--taupe); }
+/* Order matters: the current-page rule and :hover have equal specificity,
+   so :hover must come last or the active link would never respond. */
+.nav a[aria-current="page"] { color: var(--gold); }
+.nav a:hover { color: var(--espresso); }
+
+/* ---- Shared type ---- */
+.section-title {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 40px;
+}
+
+/* ---- Page header ----
+   The banded title strip on every page except Home. The lede is optional
+   (About has none); h1 carries no bottom margin so the two compose. */
+.page-head {
+  text-align: center;
+  padding: 76px 24px 56px;
+  background-color: var(--cream-warm);
+}
+.page-head h1 {
+  font-family: var(--serif);
+  font-size: 40px;
+  font-weight: 600;
+  margin: 0;
+}
+.page-head p {
+  max-width: 520px;
+  margin: 16px auto 0;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--stone);
+  text-wrap: pretty;
+}
+
+/* ---- How to Order ----
+   Shared by Home and About. */
+.how { background: var(--sand); padding: 66px 48px; }
+.how__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+.how__num {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.how__step {
+  font-family: var(--serif);
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+.how p {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--stone);
+}
+
+/* ---- Buttons ----
+   Each :hover sets both background and color, so the global a:hover
+   can't win half the declaration. */
+.btn-primary {
+  display: inline-block;
+  padding: 16px 34px;
+  background: var(--espresso);
+  color: var(--cream);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background 160ms ease, color 160ms ease;
+}
+.btn-primary:hover { background: var(--espresso-2); color: var(--cream); }
+
+.btn-outline {
+  display: inline-block;
+  padding: 10px 24px;
+  border: 1px solid var(--espresso);
+  background: transparent;
+  color: var(--espresso);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background 160ms ease, color 160ms ease;
+}
+.btn-outline:hover { background: var(--espresso); color: var(--cream); }
+
+/* the inverse of .btn-outline: starts filled, hover empties it.
+   Pages set their own width and padding (Catalog full-width, Best Sellers inline). */
+.btn-solid {
+  display: inline-block;
+  padding: 11px 26px;
+  border: 1px solid var(--espresso);
+  background: var(--espresso);
+  color: var(--cream);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+.btn-solid:hover { background: transparent; color: var(--espresso); }
+
+.btn-gold {
+  display: inline-block;
+  padding: 13px 32px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--cream);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background 160ms ease, color 160ms ease;
+}
+.btn-gold:hover { background: var(--gold-lt); color: var(--espresso); }
+
+/* ---- Image placeholder ----
+   Swap each .image-slot for a real photo when they land:
+   <img class="slot-photo" src="assets/totes.jpg" alt="Totes collection">
+   Pages set their own height; 400px is the default. */
+.image-slot {
+  height: 400px;
+  border-radius: 4px;
+  background: var(--sand);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+}
+.slot-photo {
+  height: 400px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* ---- Footer ---- */
+.footer {
+  background: var(--espresso);
+  color: var(--sand);
+  text-align: center;
+  /* Home runs slightly taller — it overrides this locally */
+  padding: 60px 24px 40px;
+}
+.footer h2 {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--cream);
+}
+.footer__lede {
+  margin: 0 0 24px;
+  font-size: 13.5px;
+  font-weight: 300;
+  color: var(--linen);
+}
+.signup {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.signup input {
+  width: 250px;
+  padding: 13px 20px;
+  border: 1px solid var(--bark);
+  border-radius: 999px;
+  background: var(--sand);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--espresso);
+  outline: none;
+}
+.signup button {
+  padding: 13px 32px;
+  border: none;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+.signup button:hover { background: var(--gold-lt); }
+.footer__nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin-top: 44px;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.footer__nav a { color: var(--linen); }
+.footer__nav a:hover { color: var(--cream); }
+.footer__legal {
+  margin-top: 26px;
+  font-size: 11.5px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--mist);
+}
+.footer__legal a { color: var(--gold); }
+.footer__legal a:hover { color: var(--gold-lt); }
+
+/* ---- Floating WhatsApp pill ---- */
+.chat-pill {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 40;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--espresso);
+  color: var(--cream);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 26px rgba(58, 42, 30, 0.28);
+  transition: background 160ms ease, color 160ms ease;
+}
+.chat-pill:hover { background: var(--gold); color: var(--espresso); }
+
+/* ---- Responsive ----
+   The design is fixed-desktop; these breakpoints are added on top. */
+@media (max-width: 900px) {
+  /* the wrapped 5-item nav makes a sticky header eat too much of a phone screen */
+  .header { position: static; flex-direction: column; gap: 14px; padding: 14px 20px; }
+  .nav { gap: 22px; flex-wrap: wrap; justify-content: center; font-size: 11.5px; }
+  .page-head { padding: 52px 20px 40px; }
+  .page-head h1 { font-size: 32px; }
+  .how { padding: 52px 20px; }
+  .how__grid { grid-template-columns: 1fr; gap: 32px; }
+  .image-slot, .slot-photo { height: 320px; }
+  .footer { padding: 52px 20px 32px; }
+}
+
+@media (max-width: 480px) {
+  .page-head h1 { font-size: 27px; }
+  .section-title { font-size: 23px; }
+  .signup input { width: 100%; max-width: 320px; }
+  .chat-pill { right: 16px; bottom: 16px; padding: 12px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

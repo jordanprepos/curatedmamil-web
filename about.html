@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our Story — Curated By Mami L</title>
+<meta name="description" content="Curated By Mami L was born from a passion for timeless accessories. Every piece is hand-selected for its quality craftsmanship, elegant design, and versatility.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* ---- About-only layout ---- */
+  .story {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 84px 48px 88px;
+  }
+  .story .image-slot,
+  .story .slot-photo { height: 460px; }
+  .story p {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--stone);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .story {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 52px 20px 56px;
+    }
+    .story .image-slot,
+    .story .slot-photo { height: 340px; }
+  }
+</style>
+</head>
+<body data-wa-message="Hello Curated By Mami L, I'd like to know more about your bags.">
+
+  <header class="header">
+    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — home">
+      <img src="assets/logo.png" alt="Curated By Mami L">
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html" aria-current="page">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <h1>Our Story</h1>
+    </section>
+
+    <section class="story">
+      <div class="image-slot">Atelier / workshop photo</div>
+      <div>
+        <p>Curated By Mami L was born from a passion for timeless accessories. Every piece in our collection is hand-selected for its quality craftsmanship, elegant design, and versatility. We believe the right bag doesn't just complete an outfit — it tells your story. From artisan workshops to your wardrobe, we bring you luxury that lasts.</p>
+      </div>
+    </section>
+
+    <section class="how">
+      <h2 class="section-title">How to Order</h2>
+      <div class="how__grid">
+        <div>
+          <div class="how__num">01</div>
+          <div class="how__step">Browse the catalog</div>
+          <p>Filter by style or search by name. Everything shown is in stock.</p>
+        </div>
+        <div>
+          <div class="how__num">02</div>
+          <div class="how__step">Tap to order</div>
+          <p>WhatsApp opens with the bag and price already written for you.</p>
+        </div>
+        <div>
+          <div class="how__num">03</div>
+          <div class="how__step">We hold it for you</div>
+          <p>Confirm payment and delivery in the chat. Each bag is reserved 24 hours.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <h2>Say hello</h2>
+    <p class="footer__lede">We reply to every message, usually within the hour.</p>
+    <a class="btn-gold js-wa" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footer__legal">© 2026 Curated By Mami L. All rights reserved.</div>
+  </footer>
+
+  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener">Chat with us</a>
+
+<script type="module" src="assets/firebase.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

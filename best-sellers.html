@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Best Sellers — Curated By Mami L</title>
+<meta name="description" content="The three pieces our customers come back for. Restocked in small runs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* ---- Best Sellers-only layout ---- */
+  .best { padding: 72px 48px 96px; }
+  .best__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .best-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /* square corners and taller than the shared default — these slots are rect.
+     (0,2,0) so it also beats the shared ≤900px height rule. */
+  .best-card .image-slot,
+  .best-card .slot-photo { height: 420px; border-radius: 0; }
+  .best-card__body { text-align: center; }
+  .best-card__name {
+    font-family: var(--serif);
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .best-card__price {
+    font-size: 13px;
+    color: var(--price);
+  }
+  .best-card__body p {
+    max-width: 300px;
+    margin: 12px auto 0;
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+  .best-card__body .btn-solid { margin-top: 18px; }
+
+  @media (max-width: 900px) {
+    .best { padding: 52px 20px 64px; }
+    .best__grid { grid-template-columns: 1fr; gap: 40px; }
+    .best-card .image-slot,
+    .best-card .slot-photo { height: 340px; }
+  }
+</style>
+</head>
+<body data-wa-message="Hello Curated By Mami L, I'd like to ask about your best sellers.">
+
+  <header class="header">
+    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — home">
+      <img src="assets/logo.png" alt="Curated By Mami L">
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html" aria-current="page">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <h1>Best Sellers</h1>
+      <p>The three pieces our customers come back for. Restocked in small runs.</p>
+    </section>
+
+    <section class="best">
+      <!-- Static markup, like the catalog: each Order link is a real wa.me href
+           built by site.js from data-wa-message, so it works without JS. -->
+      <div class="best__grid">
+
+        <article class="best-card">
+          <div class="image-slot">Camel Day Bag</div>
+          <div class="best-card__body">
+            <div class="best-card__name">Camel Day Bag</div>
+            <div class="best-card__price">Rp 2.450.000</div>
+            <p>Soft grain leather that only improves with wear.</p>
+            <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
+               data-wa-message="Hello Curated By Mami L, I'd like to order the Camel Day Bag (Rp 2.450.000). Is it still available?">Order on WhatsApp</a>
+          </div>
+        </article>
+
+        <article class="best-card">
+          <div class="image-slot">Ivory Pearl Bag</div>
+          <div class="best-card__body">
+            <div class="best-card__name">Ivory Pearl Bag</div>
+            <div class="best-card__price">Rp 2.750.000</div>
+            <p>Our most requested piece for weddings and events.</p>
+            <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
+               data-wa-message="Hello Curated By Mami L, I'd like to order the Ivory Pearl Bag (Rp 2.750.000). Is it still available?">Order on WhatsApp</a>
+          </div>
+        </article>
+
+        <article class="best-card">
+          <div class="image-slot">Cognac Hobo</div>
+          <div class="best-card__body">
+            <div class="best-card__name">Cognac Hobo</div>
+            <div class="best-card__price">Rp 2.350.000</div>
+            <p>Slouchy shape with a gold chain strap.</p>
+            <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
+               data-wa-message="Hello Curated By Mami L, I'd like to order the Cognac Hobo (Rp 2.350.000). Is it still available?">Order on WhatsApp</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <h2>See the full catalog</h2>
+    <p class="footer__lede">Six more pieces in stock right now.</p>
+    <a class="btn-gold" href="catalog.html">Browse Catalog</a>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footer__legal">© 2026 Curated By Mami L. All rights reserved.</div>
+  </footer>
+
+  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener">Chat with us</a>
+
+<script type="module" src="assets/firebase.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

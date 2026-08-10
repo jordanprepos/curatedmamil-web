@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Featured Collections — Curated By Mami L</title>
+<meta name="description" content="Three ways to carry the day. Pick a silhouette, then browse everything available in that style.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* ---- Collections-only layout ---- */
+  .collections { padding: 72px 48px 96px; }
+  .collections__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .collection-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /* taller than the Home cards */
+  .collection-card .image-slot,
+  .collection-card .slot-photo { height: 440px; }
+  .collection-card__body { text-align: center; }
+  .collection-card__title {
+    font-family: var(--serif);
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .collection-card__body p {
+    margin: 0 0 16px;
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+
+  @media (max-width: 900px) {
+    .collections { padding: 52px 20px 64px; }
+    .collections__grid { grid-template-columns: 1fr; gap: 36px; }
+    .collection-card .image-slot,
+    .collection-card .slot-photo { height: 340px; }
+  }
+</style>
+</head>
+<body data-wa-message="Hello Curated By Mami L, I'd like help choosing a bag from your collections.">
+
+  <header class="header">
+    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — home">
+      <img src="assets/logo.png" alt="Curated By Mami L">
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="collections.html" aria-current="page">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <h1>Featured Collections</h1>
+      <p>Three ways to carry the day. Pick a silhouette, then browse everything available in that style.</p>
+    </section>
+
+    <section class="collections">
+      <div class="collections__grid">
+        <article class="collection-card">
+          <div class="image-slot">Totes collection photo</div>
+          <div class="collection-card__body">
+            <div class="collection-card__title">Totes</div>
+            <p>Roomy, structured, built for long days.</p>
+            <a class="btn-outline" href="catalog.html">View Totes</a>
+          </div>
+        </article>
+
+        <article class="collection-card">
+          <div class="image-slot">Crossbody collection photo</div>
+          <div class="collection-card__body">
+            <div class="collection-card__title">Crossbody</div>
+            <p>Hands free, softly worn, easy to dress up.</p>
+            <a class="btn-outline" href="catalog.html">View Crossbody</a>
+          </div>
+        </article>
+
+        <article class="collection-card">
+          <div class="image-slot">Clutches collection photo</div>
+          <div class="collection-card__body">
+            <div class="collection-card__title">Clutches</div>
+            <p>Evening pieces, small and deliberate.</p>
+            <a class="btn-outline" href="catalog.html">View Clutches</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <h2>Not sure which suits you?</h2>
+    <p class="footer__lede">Message us and we'll help you choose.</p>
+    <a class="btn-gold js-wa" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    <nav class="footer__nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="best-sellers.html">Best Sellers</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footer__legal">© 2026 Curated By Mami L. All rights reserved.</div>
+  </footer>
+
+  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener">Chat with us</a>
+
+<script type="module" src="assets/firebase.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
