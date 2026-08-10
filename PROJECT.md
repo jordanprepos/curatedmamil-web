@@ -254,19 +254,23 @@ in `catalog.html` and edit four things:
 
 Best Sellers works the same way, minus `data-cat` and the heart.
 
-Current stock:
+Both grids are now no-JS fallbacks — the live pages come from Firestore, so
+Firestore is the source of truth for stock and this markup only has to mirror
+the bags whose `status` is `Aktif`. Anything sold, archived or on hold must stay
+out of it: a failed read would otherwise advertise stock that cannot be bought.
+
+Fallback contents, both pages (last synced 2026-08-11):
 
 | Bag | Price | Category |
 | --- | --- | --- |
 | Elara Tote | Rp 2.850.000 | Totes |
-| Selene Crossbody | Rp 1.950.000 | Crossbody |
-| Aurelia Shoulder Bag | Rp 2.250.000 | Shoulder |
-| Vega Chain Bag | Rp 2.100.000 | Shoulder |
-| Luna Tote | Rp 3.150.000 | Totes |
 | Mira Clutch | Rp 1.650.000 | Clutch |
 
-Best Sellers: Camel Day Bag (Rp 2.450.000), Ivory Pearl Bag (Rp 2.750.000),
-Cognac Hobo (Rp 2.350.000).
+The other three seeded bags — Selene Crossbody (`Ditahan`), Aurelia Shoulder Bag
+(`Terjual`), Luna Tote (`Arsip`) — are intentionally unpublished, so they appear
+in neither grid. Firestore also holds two placeholder docs, "Test" (Rp 50.000)
+and "Test 2" (Rp 1.000), which *are* `Aktif` and so render on the live pages;
+they are left out of the fallbacks as test data, not real stock.
 
 ### Drop in a real photo
 
@@ -433,16 +437,21 @@ Not in the source designs, added on top:
 1. **The WhatsApp number is a placeholder.** `WHATSAPP_NUMBER` in
    `assets/site.js` is still the design's `6281234567890`. It drives every chat
    link on every page. **This blocks launch.**
-2. **All product and collection photos are placeholders.** 16 `.image-slot` divs
-   across the site — 3 on Home, 3 on Collections, 6 on Catalog, 3 on Best
-   Sellers, 1 on About.
+2. **All product and collection photos are placeholders.** 11 `.image-slot` divs
+   in the markup — 3 on Home, 3 on Collections, 2 on Catalog, 2 on Best Sellers,
+   1 on About. Catalog and Best Sellers are the fallback lists only; the live
+   grids build one slot per bag returned by Firestore, so the real number of
+   photos needed tracks the active stock.
 3. **The newsletter form posts to `#`.** `.signup` on Home needs a real
    mailing-list endpoint.
-4. **The static catalog markup is now a fallback, and it is out of sync.** The
-   live database has 5 bags of which 2 are `Aktif`; the hand-written list has 6,
-   including "Vega Chain Bag", which does not exist in Firestore at all. Either
-   add the missing bags in the dashboard or trim the fallback to match.
-5. **Best Sellers is still hand-written** — it does not read Firestore.
+4. **The fallback lists need re-syncing whenever stock changes.** Both grids were
+   trimmed to the `Aktif` bags on 2026-08-11, but nothing enforces this — a bag
+   published or sold in the dashboard will not update the hand-written markup.
+5. **Best Sellers is not really curated.** It reads Firestore, but the products
+   collection has no best-seller flag, so it just shows the first three `Aktif`
+   bags. Add a `bestSeller` boolean in the dashboard and the query in
+   `assets/best-sellers-live.js` becomes a real selection (see the comment
+   at the top of that file).
 6. **No App Check.** Rules are in place (§7) but App Check is not configured.
 7. **No favicon** — every page requests `/favicon.ico` and gets a 404.
 

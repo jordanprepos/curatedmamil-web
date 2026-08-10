@@ -170,10 +170,14 @@
         </div>
       </div>
 
-      <!-- Products are plain markup so they work without JS: every bag is listed
-           and every Order link is a real wa.me href. JS adds search, category
-           filtering and the save hearts on top. To add a bag, copy one <article>
-           and set data-name / data-cat / data-wa-message. -->
+      <!-- No-JS fallback: catalog-live.js replaces this grid with the live
+           Firestore list. Keep it in sync with the bags whose status is
+           "Aktif" — anything sold, archived or on hold must not appear here,
+           since a failed read would otherwise advertise unavailable stock.
+           Real stock only: the "Test" / "Test 2" docs in Firestore are active
+           but are placeholder data, so they are deliberately left out.
+           To add a bag, copy one <article> and set data-name / data-cat /
+           data-wa-message. Last synced with Firestore 2026-08-11. -->
       <div class="products js-products">
 
         <article class="product" data-name="Elara Tote" data-cat="Totes">
@@ -186,58 +190,6 @@
             <div class="product__price">Rp 2.850.000</div>
             <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
                data-wa-message="Hello Curated By Mami L, I'd like to order the Elara Tote (Rp 2.850.000). Is it still available?">Order on WhatsApp</a>
-          </div>
-        </article>
-
-        <article class="product" data-name="Selene Crossbody" data-cat="Crossbody">
-          <div class="product__media">
-            <div class="image-slot">Selene Crossbody</div>
-            <button class="product__fav" type="button" aria-pressed="false" aria-label="Save Selene Crossbody">♥</button>
-          </div>
-          <div class="product__body">
-            <div class="product__name">Selene Crossbody</div>
-            <div class="product__price">Rp 1.950.000</div>
-            <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Selene Crossbody (Rp 1.950.000). Is it still available?">Order on WhatsApp</a>
-          </div>
-        </article>
-
-        <article class="product" data-name="Aurelia Shoulder Bag" data-cat="Shoulder">
-          <div class="product__media">
-            <div class="image-slot">Aurelia Shoulder Bag</div>
-            <button class="product__fav" type="button" aria-pressed="false" aria-label="Save Aurelia Shoulder Bag">♥</button>
-          </div>
-          <div class="product__body">
-            <div class="product__name">Aurelia Shoulder Bag</div>
-            <div class="product__price">Rp 2.250.000</div>
-            <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Aurelia Shoulder Bag (Rp 2.250.000). Is it still available?">Order on WhatsApp</a>
-          </div>
-        </article>
-
-        <article class="product" data-name="Vega Chain Bag" data-cat="Shoulder">
-          <div class="product__media">
-            <div class="image-slot">Vega Chain Bag</div>
-            <button class="product__fav" type="button" aria-pressed="false" aria-label="Save Vega Chain Bag">♥</button>
-          </div>
-          <div class="product__body">
-            <div class="product__name">Vega Chain Bag</div>
-            <div class="product__price">Rp 2.100.000</div>
-            <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Vega Chain Bag (Rp 2.100.000). Is it still available?">Order on WhatsApp</a>
-          </div>
-        </article>
-
-        <article class="product" data-name="Luna Tote" data-cat="Totes">
-          <div class="product__media">
-            <div class="image-slot">Luna Tote</div>
-            <button class="product__fav" type="button" aria-pressed="false" aria-label="Save Luna Tote">♥</button>
-          </div>
-          <div class="product__body">
-            <div class="product__name">Luna Tote</div>
-            <div class="product__price">Rp 3.150.000</div>
-            <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Luna Tote (Rp 3.150.000). Is it still available?">Order on WhatsApp</a>
           </div>
         </article>
 

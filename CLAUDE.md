@@ -84,12 +84,18 @@ from the database.
 points at it; deploy with `firebase deploy --only firestore`). Everything is
 owner-only except public read of active products.
 
-**Products** are plain `<article class="product">` markup, one per bag. On
-`catalog.html` this is now the **no-JS fallback** — `catalog-live.js` replaces it
-when Firestore returns at least one active bag, so a network failure or an empty
-result leaves the static list rather than blanking the shop. Note the fallback
-list is currently out of sync with the database. Best Sellers is still purely
-hand-written. To add a bag by hand: copy an `<article>` and edit its `data-name`,
+**`assets/best-sellers-live.js`** (best-sellers.html only): the same pattern for
+the `.best__grid`. The products collection has **no best-seller flag**, so it
+shows the first three `Aktif` bags rather than a curated set — the file's header
+comment says how to make it a real selection. Live cards carry no description
+paragraph because there is no such field in the database.
+
+**Products** are plain `<article>` markup, one per bag. On both `catalog.html`
+and `best-sellers.html` this is now the **no-JS fallback** — the live script
+replaces it when Firestore returns at least one active bag, so a network failure
+or an empty result leaves the static list rather than blanking the shop. Keep
+those lists mirroring the `Aktif` bags only: a failed read must never advertise
+sold or archived stock. To add a bag by hand: copy an `<article>` and edit its `data-name`,
 `data-cat` (catalog.html only), price text, and `data-wa-message` (see PROJECT.md
 §6 for the full recipe and current stock list).
 
@@ -108,12 +114,13 @@ rules in `site.css` so no other CSS changes are needed.
 Tracked in detail in PROJECT.md § "Known gaps":
 1. `WHATSAPP_NUMBER` in `assets/site.js` is still the design's placeholder
    (`6281234567890`) — drives every chat link on every page.
-2. Every `.image-slot` (16 across the site) needs a real photo per the swap
+2. Every `.image-slot` (11 in the markup, plus one per live Firestore bag on
+   Catalog and Best Sellers) needs a real photo per the swap
    above.
 3. The `.signup` form on `index.html` posts to `#` — no real mailing-list
    endpoint is wired up.
-4. The static catalog markup is out of sync with Firestore — the live database
-   has 5 bags, 2 of them `Aktif`; the fallback list has 6, one of which
-   ("Vega Chain Bag") doesn't exist in Firestore at all.
+4. The two fallback lists were synced to the `Aktif` bags on 2026-08-11, but
+   nothing keeps them in sync — publishing or selling a bag in the dashboard
+   won't update the hand-written markup.
 5. App Check is not configured (Security Rules are).
 6. No favicon — every page requests `/favicon.ico` and gets a 404.

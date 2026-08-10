@@ -1,16 +1,19 @@
 /* ============================================================
-   Curated By Mami L — live catalog
+   Curated By Mami L — live best sellers
 
-   Reads the same Firestore the Mami L dashboard writes to, so the
-   website and the app share one product list. Only bags with
-   status "Aktif" are published; the Security Rules enforce that,
-   which is why the query below MUST keep its status filter — drop
-   it and Firestore rejects the whole read.
+   Same Firestore, same rule as the catalog: only bags with status
+   "Aktif" are published, and that filter is required by the Security
+   Rules, not a preference — drop it and the read is rejected.
 
-   The hand-written product markup in catalog.html stays as the
-   no-JS fallback. It is only replaced once at least one live bag
-   comes back, so a network failure or an empty result leaves the
-   page as it was rather than blanking the shop.
+   There is no "best seller" flag in the dashboard's product schema,
+   so this page shows the first few active bags rather than a curated
+   set. Give the products a bestSeller field in the dashboard and this
+   becomes a real selection: add where("bestSeller", "==", true) to
+   the query below (two equality filters need no composite index).
+
+   The hand-written markup in best-sellers.html stays as the no-JS
+   fallback and is only replaced once at least one live bag comes
+   back, so a network failure leaves the page as it was.
    ============================================================ */
 
 import { app } from "./firebase.js";
@@ -22,16 +25,10 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-/* The dashboard stores categories in Indonesian; the site's filter
-   buttons are English. Anything unmapped falls back to its raw value. */
-const CATEGORY_LABELS = {
-  Tote: "Totes",
-  Selempang: "Crossbody",
-  Clutch: "Clutch",
-  Bahu: "Shoulder"
-};
-
 const PUBLISHED_STATUS = "Aktif";
+
+/* The design lays this page out as three across. */
+const MAX_CARDS = 3;
 
 function formatPrice(value) {
   const n = Number(value);
@@ -75,40 +72,30 @@ function buildSlot(bag) {
 }
 
 /* Built with DOM methods rather than innerHTML: these values come from the
-   database, so they are treated as untrusted text, never as markup. */
+   database, so they are treated as untrusted text, never as markup.
+
+   No description paragraph here — the products collection has no such field,
+   and the point of this page reading the database is that nothing about a bag
+   is hand-written any more. */
 function buildCard(bag) {
   const article = document.createElement("article");
-  article.className = "product";
-  article.dataset.name = bag.name;
-  article.dataset.cat = bag.category;
-
-  const media = document.createElement("div");
-  media.className = "product__media";
+  article.className = "best-card";
 
   const slot = buildSlot(bag);
 
-  const fav = document.createElement("button");
-  fav.className = "product__fav";
-  fav.type = "button";
-  fav.setAttribute("aria-pressed", "false");
-  fav.setAttribute("aria-label", "Save " + bag.name);
-  fav.textContent = "♥";
-
-  media.append(slot, fav);
-
   const body = document.createElement("div");
-  body.className = "product__body";
+  body.className = "best-card__body";
 
   const name = document.createElement("div");
-  name.className = "product__name";
+  name.className = "best-card__name";
   name.textContent = bag.name;
 
   const price = document.createElement("div");
-  price.className = "product__price";
+  price.className = "best-card__price";
   price.textContent = bag.price;
 
   const order = document.createElement("a");
-  order.className = "btn-solid product__order js-wa";
+  order.className = "btn-solid js-wa";
   order.href = "#";
   order.target = "_blank";
   order.rel = "noopener";
@@ -121,12 +108,12 @@ function buildCard(bag) {
   order.textContent = "Order on WhatsApp";
 
   body.append(name, price, order);
-  article.append(media, body);
+  article.append(slot, body);
   return article;
 }
 
-async function loadCatalog() {
-  const grid = document.querySelector(".js-products");
+async function loadBestSellers() {
+  const grid = document.querySelector(".js-best");
   if (!grid) return;
 
   const db = getFirestore(app);
@@ -142,7 +129,6 @@ async function loadCatalog() {
       return {
         name: String(d.name || "").trim(),
         price: formatPrice(d.price),
-        category: CATEGORY_LABELS[d.cat] || d.cat || "",
         photo: safePhotoUrl(d.imageUrl)
       };
     })
@@ -153,22 +139,22 @@ async function loadCatalog() {
     // filter would need a composite index for no real benefit at this size
     .sort(function (a, b) {
       return a.name.localeCompare(b.name);
-    });
+    })
+    .slice(0, MAX_CARDS);
 
   if (!bags.length) {
-    console.info("Live catalog: no active products; keeping the static list.");
+    console.info("Live best sellers: no active products; keeping the static list.");
     return;
   }
 
   grid.replaceChildren(...bags.map(buildCard));
 
-  // Give the new nodes their wa.me hrefs, then re-run any active filter.
+  // Give the new nodes their wa.me hrefs.
   window.CBML?.wireWaLinks(grid);
-  window.CBML?.applyCatalogFilters?.();
 
   grid.dataset.source = "firestore";
 }
 
-loadCatalog().catch(function (err) {
-  console.warn("Live catalog unavailable, showing the static list:", err.message);
+loadBestSellers().catch(function (err) {
+  console.warn("Live best sellers unavailable, showing the static list:", err.message);
 });

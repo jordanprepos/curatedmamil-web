@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Best Sellers — Curated By Mami L</title>
-<meta name="description" content="The three pieces our customers come back for. Restocked in small runs.">
+<meta name="description" content="The pieces our customers come back for. Restocked in small runs.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -74,44 +74,36 @@
   <main>
     <section class="page-head">
       <h1>Best Sellers</h1>
-      <p>The three pieces our customers come back for. Restocked in small runs.</p>
+      <p>The pieces our customers come back for. Restocked in small runs.</p>
     </section>
 
     <section class="best">
-      <!-- Static markup, like the catalog: each Order link is a real wa.me href
-           built by site.js from data-wa-message, so it works without JS. -->
-      <div class="best__grid">
+      <!-- No-JS fallback: best-sellers-live.js replaces this grid with the live
+           Firestore list. Keep it in sync with the bags whose status is
+           "Aktif" — anything sold, archived or on hold must not appear here,
+           since a failed read would otherwise advertise unavailable stock.
+           Real stock only: the "Test" / "Test 2" docs in Firestore are active
+           but are placeholder data, so they are deliberately left out.
+           Last synced with Firestore 2026-08-11. -->
+      <div class="best__grid js-best">
 
         <article class="best-card">
-          <div class="image-slot">Camel Day Bag</div>
+          <div class="image-slot">Elara Tote</div>
           <div class="best-card__body">
-            <div class="best-card__name">Camel Day Bag</div>
-            <div class="best-card__price">Rp 2.450.000</div>
-            <p>Soft grain leather that only improves with wear.</p>
+            <div class="best-card__name">Elara Tote</div>
+            <div class="best-card__price">Rp 2.850.000</div>
             <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Camel Day Bag (Rp 2.450.000). Is it still available?">Order on WhatsApp</a>
+               data-wa-message="Hello Curated By Mami L, I'd like to order the Elara Tote (Rp 2.850.000). Is it still available?">Order on WhatsApp</a>
           </div>
         </article>
 
         <article class="best-card">
-          <div class="image-slot">Ivory Pearl Bag</div>
+          <div class="image-slot">Mira Clutch</div>
           <div class="best-card__body">
-            <div class="best-card__name">Ivory Pearl Bag</div>
-            <div class="best-card__price">Rp 2.750.000</div>
-            <p>Our most requested piece for weddings and events.</p>
+            <div class="best-card__name">Mira Clutch</div>
+            <div class="best-card__price">Rp 1.650.000</div>
             <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Ivory Pearl Bag (Rp 2.750.000). Is it still available?">Order on WhatsApp</a>
-          </div>
-        </article>
-
-        <article class="best-card">
-          <div class="image-slot">Cognac Hobo</div>
-          <div class="best-card__body">
-            <div class="best-card__name">Cognac Hobo</div>
-            <div class="best-card__price">Rp 2.350.000</div>
-            <p>Slouchy shape with a gold chain strap.</p>
-            <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Hello Curated By Mami L, I'd like to order the Cognac Hobo (Rp 2.350.000). Is it still available?">Order on WhatsApp</a>
+               data-wa-message="Hello Curated By Mami L, I'd like to order the Mira Clutch (Rp 1.650.000). Is it still available?">Order on WhatsApp</a>
           </div>
         </article>
 
@@ -121,7 +113,7 @@
 
   <footer class="footer">
     <h2>See the full catalog</h2>
-    <p class="footer__lede">Six more pieces in stock right now.</p>
+    <p class="footer__lede">Every piece we have in stock right now.</p>
     <a class="btn-gold" href="catalog.html">Browse Catalog</a>
     <nav class="footer__nav" aria-label="Footer">
       <a href="index.html">Home</a>
@@ -137,5 +129,6 @@
 
 <script type="module" src="assets/firebase.js"></script>
 <script src="assets/site.js"></script>
+<script type="module" src="assets/best-sellers-live.js"></script>
 </body>
 </html>
