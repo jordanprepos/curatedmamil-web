@@ -52,10 +52,13 @@ when testing Firebase** — Analytics needs a real http(s) origin and is skipped
 ├── catalog.html          Our Catalog  (+ filtering UI)
 ├── best-sellers.html     Best Sellers
 ├── about.html            Our Story
+├── firebase.json         points the CLI at the rules file
+├── firestore.rules       Firestore Security Rules (deployable)
 ├── assets/
 │   ├── site.css          shared chrome + design tokens
 │   ├── site.js           builds every wa.me link
 │   ├── catalog.js        catalog search / filter / save hearts
+│   ├── catalog-live.js   reads products from the shared Firestore
 │   ├── firebase.js       Firebase app init
 │   ├── logo.png          512×512 brand mark
 │   └── README.md         asset notes
@@ -301,46 +304,90 @@ Copy the closest existing page, then:
 
 ---
 
-## 7. Firebase
+## 7. Firebase and the shared database
 
-Connected to project **`curated-mamil`** (project number `933806785731`).
+The site is on project **`mamiel-project`** (project number `481440432212`) —
+**the same project the Mami L dashboard app uses**, so both read one Firestore.
 
 Because there is no build step, `assets/firebase.js` loads the modular SDK from
 `gstatic.com` **pinned to 12.17.1** rather than npm, and every page includes it
-as `<script type="module">`.
+as `<script type="module">`. It exports `app`, `firebaseConfig` and
+`analyticsReady`. Analytics is live on `G-SJP0HVJFN3`.
 
-It exports `app`, `firebaseConfig`, and `analyticsReady`.
+### The products collection
 
-**Analytics is currently inactive.** Google Analytics has not been linked to the
-project, so no `measurementId` is issued. The code requires one before calling
-`getAnalytics()` — without that guard the SDK "succeeds" but injects
-`googletagmanager.com/gtag/js?id=undefined` and reports nowhere. To enable it:
-turn on Google Analytics for the project in the Firebase console, then add the
-`G-XXXXXXX` to `firebaseConfig`.
+The dashboard owns the data; the website only reads it.
 
-To add another product, import it in `firebase.js` from the same pinned version
-and export the instance:
+| Field | Type | Notes |
+| --- | --- | --- |
+| `name` | string | e.g. "Elara Tote" |
+| `price` | integer | rupiah, unformatted — `2850000` |
+| `cat` | string | **Indonesian**: `Tote`, `Selempang`, `Clutch`, `Bahu` |
+| `status` | string | `Aktif`, `Ditahan`, `Terjual`, `Arsip` |
+| `sku` | string | e.g. `CBML-001` |
+| `createdAt` / `updatedAt` / `soldAt` | timestamp | |
+
+`assets/catalog-live.js` maps the categories to the site's filter labels —
+Tote→Totes, Selempang→Crossbody, Bahu→Shoulder, Clutch→Clutch — and formats
+`price` with `toLocaleString("id-ID")`.
+
+### Security Rules
+
+Rules live in `firestore.rules` and deploy with `firebase deploy --only firestore`.
+`firebase.json` wires the two together.
+
+Everything is owner-only (gated on an `owners/{uid}` marker document) **except**
+one public read:
+
+```
+match /products/{productId} {
+  allow read: if resource.data.status == 'Aktif' || isOwner();
+  allow write: if isOwner();
+}
+```
+
+So the storefront can list bags that are on the shelf, and nothing else — sold,
+held and archived bags stay private, `orders` and `shop` stay private, and every
+write still requires the owner.
+
+**This constrains the client query, not just the rule.** A read of the
+collection must filter on `status == "Aktif"` or Firestore rejects it outright.
+That is why the `where()` clause in `catalog-live.js` is load-bearing rather
+than cosmetic — removing it breaks the page with `permission-denied`.
+
+### How the live catalog loads
+
+1. `catalog.html` ships the hand-written product markup, which is what a visitor
+   without JavaScript sees.
+2. `catalog-live.js` queries the active products and, **if at least one comes
+   back**, replaces the grid and sets `data-source="firestore"` on it. A network
+   failure or an empty result leaves the static list in place rather than
+   blanking the shop.
+3. It then calls `window.CBML.wireWaLinks()` to give the new order links their
+   `wa.me` hrefs, and `window.CBML.applyCatalogFilters()` to re-apply whatever
+   filter was active.
+
+Because the grid can be replaced, `catalog.js` never caches the product nodes
+and handles the hearts by delegation.
+
+Cards are built with `createElement`/`textContent`, never `innerHTML` — the
+values come from a database and are treated as untrusted text.
+
+### Adding another Firebase product
+
+Import it in `firebase.js` from the same pinned version and export the instance:
 
 ```js
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 export const db = getFirestore(app);
 ```
 
-Then from a page:
+### On the config values
 
-```html
-<script type="module">
-  import { db } from "./assets/firebase.js";
-</script>
-```
-
-**On the config values:** a Firebase web config is public by design — it
-identifies the project, it does not authorise anything. Real protection comes
-from Security Rules and App Check, **neither of which is set up**. Configure both
-before storing customer data, and restrict the API key to your domains in the
-Google Cloud console.
-
-Nothing on the site uses Firebase yet beyond initialising it.
+A Firebase web config is public by design — it identifies the project, it does
+not authorise anything. Protection comes from Security Rules (above) and App
+Check, **which is not set up**. Worth adding before the shop gets traffic, along
+with restricting the API key to your domains in the Google Cloud console.
 
 ---
 
@@ -391,8 +438,13 @@ Not in the source designs, added on top:
    Sellers, 1 on About.
 3. **The newsletter form posts to `#`.** `.signup` on Home needs a real
    mailing-list endpoint.
-4. **Firebase has no Security Rules or App Check**, and Analytics is off (§7).
-5. **No favicon** — every page requests `/favicon.ico` and gets a 404.
+4. **The static catalog markup is now a fallback, and it is out of sync.** The
+   live database has 5 bags of which 2 are `Aktif`; the hand-written list has 6,
+   including "Vega Chain Bag", which does not exist in Firestore at all. Either
+   add the missing bags in the dashboard or trim the fallback to match.
+5. **Best Sellers is still hand-written** — it does not read Firestore.
+6. **No App Check.** Rules are in place (§7) but App Check is not configured.
+7. **No favicon** — every page requests `/favicon.ico` and gets a 404.
 
 ### Cosmetic, noted but not changed
 

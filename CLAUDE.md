@@ -9,6 +9,12 @@ Static implementation of the Claude Design project "Canva design import request"
 "Curated By Mami L", a bag reseller that takes orders via WhatsApp. No framework,
 no build step, no package.json.
 
+**`PROJECT.md` is the detailed reference** for this repo — full design-token
+table, per-page CSS ownership, content recipes, and the complete Firebase
+section. Read it before non-trivial changes; this file only covers what's
+needed to get productive quickly. `README.md` is the short human-facing
+overview; `assets/README.md` covers the logo/photo asset pipeline.
+
 ## Commands
 
 No build/lint/test tooling exists. To preview:
@@ -17,7 +23,10 @@ No build/lint/test tooling exists. To preview:
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000/index.html` (or any page).
+Then open `http://localhost:8000/index.html` (or any page). `.claude/launch.json`
+defines this same command as the `static` configuration for Claude Code's
+preview pane. Prefer serving over opening files directly from disk — Firebase
+Analytics requires a real http(s) origin and is skipped on `file://`.
 
 ## Architecture
 
@@ -32,6 +41,7 @@ project (see README.md table). Every page:
 - sets `<body data-wa-message="…">` — the default prefilled WhatsApp message for
   every `.js-wa` link on that page unless a link overrides it with its own
   `data-wa-message`.
+- includes `assets/firebase.js` as `<script type="module">` for Firebase init.
 
 **`assets/site.css`**: shared chrome — design tokens (`:root`, from the Curated
 By Mami L design) plus header, nav, page-header band, "How to Order" section,
@@ -52,11 +62,40 @@ live), and save-heart toggles (`aria-pressed`, in-session only, no persistence).
 Bails out silently if the page doesn't have the expected `.js-search`/`.js-cats`/
 `.product` elements, so it's safe to include site-wide if needed later.
 
-**Products** are plain `<article class="product">` markup, one per bag, not
-generated from data — this was a deliberate resolution of the source design's
-`<sc-for>`/`DCLogic` array so every bag still lists and every Order button still
-works with JS disabled. To add a bag: copy an `<article>` and edit its
-`data-name`, `data-cat` (catalog.html only), price text, and `data-wa-message`.
+**`assets/firebase.js`**: initializes the Firebase app (project `mamiel-project`
+— the same project the Mami L dashboard app uses, so both share one Firestore)
+using the modular SDK loaded from `gstatic.com` and pinned to a fixed version —
+not from npm, since there's no build step. Exports `app`, `firebaseConfig`, and
+`analyticsReady`; Analytics is live on `G-SJP0HVJFN3`. To add another Firebase
+product (Auth, Storage), import it in this file from the same pinned SDK version
+and export the instance — see the comment block at the top of the file and
+PROJECT.md §7. App Check is not configured yet.
+
+**`assets/catalog-live.js`** (catalog.html only): reads the dashboard's
+`products` collection and replaces the grid. Only `status == "Aktif"` bags are
+published, and **that `where()` clause is required by the Security Rules, not a
+preference** — drop it and the whole query fails with `permission-denied`. Maps
+the dashboard's Indonesian categories (Tote/Selempang/Bahu/Clutch) onto the
+site's filter labels and formats the integer `price` as rupiah. Cards are built
+with `createElement`/`textContent`, never `innerHTML`, since the values come
+from the database.
+
+**`firestore.rules`** is the source of truth for Security Rules (`firebase.json`
+points at it; deploy with `firebase deploy --only firestore`). Everything is
+owner-only except public read of active products.
+
+**Products** are plain `<article class="product">` markup, one per bag. On
+`catalog.html` this is now the **no-JS fallback** — `catalog-live.js` replaces it
+when Firestore returns at least one active bag, so a network failure or an empty
+result leaves the static list rather than blanking the shop. Note the fallback
+list is currently out of sync with the database. Best Sellers is still purely
+hand-written. To add a bag by hand: copy an `<article>` and edit its `data-name`,
+`data-cat` (catalog.html only), price text, and `data-wa-message` (see PROJECT.md
+§6 for the full recipe and current stock list).
+
+Because the grid can be replaced at runtime, `catalog.js` never caches the
+product nodes and handles the hearts by delegation; `site.js` exposes
+`window.CBML.wireWaLinks()` so re-rendered order links get their `wa.me` hrefs.
 
 **`<image-slot>` placeholders**: the source design's `<image-slot>` custom
 element was resolved to plain `<div class="image-slot">` divs carrying the
@@ -66,11 +105,15 @@ rules in `site.css` so no other CSS changes are needed.
 
 ## Known gaps before this goes live
 
-Tracked in detail in README.md § "Before this goes live":
-1. `WHATSAPP_NUMBER` in `assets/site.js` is still the design's placeholder.
-2. `assets/logo.png` is missing (referenced by every page); see
-   `assets/README.md` for why it couldn't be pulled from the design project
-   automatically and where to download it from.
-3. Every `.image-slot` needs a real photo per the swap above.
-4. The `.signup` form on `index.html` posts to `#` — no real mailing-list
+Tracked in detail in PROJECT.md § "Known gaps":
+1. `WHATSAPP_NUMBER` in `assets/site.js` is still the design's placeholder
+   (`6281234567890`) — drives every chat link on every page.
+2. Every `.image-slot` (16 across the site) needs a real photo per the swap
+   above.
+3. The `.signup` form on `index.html` posts to `#` — no real mailing-list
    endpoint is wired up.
+4. The static catalog markup is out of sync with Firestore — the live database
+   has 5 bags, 2 of them `Aktif`; the fallback list has 6, one of which
+   ("Vega Chain Bag") doesn't exist in Firestore at all.
+5. App Check is not configured (Security Rules are).
+6. No favicon — every page requests `/favicon.ico` and gets a 404.

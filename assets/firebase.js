@@ -22,13 +22,15 @@ import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12
 
 // Firebase web config is public by design — it identifies the project, it does
 // not authorise anything. Access is controlled by Security Rules and App Check.
+/* Same project as the Mami L dashboard app, so both read one Firestore. */
 export const firebaseConfig = {
-  apiKey: "AIzaSyDdZDdzg6CiSS5dZIp6i9Ie7V-XSVjHQtA",
-  authDomain: "curated-mamil.firebaseapp.com",
-  projectId: "curated-mamil",
-  storageBucket: "curated-mamil.firebasestorage.app",
-  messagingSenderId: "933806785731",
-  appId: "1:933806785731:web:f747237efd7f1e750f4e76"
+  apiKey: "AIzaSyAQNC27PX0iEpzQ_sbbyA0VzfdrsZv4LVc",
+  authDomain: "mamiel-project.firebaseapp.com",
+  projectId: "mamiel-project",
+  storageBucket: "mamiel-project.firebasestorage.app",
+  messagingSenderId: "481440432212",
+  appId: "1:481440432212:web:743e98928f02a6745c2dc1",
+  measurementId: "G-SJP0HVJFN3"
 };
 
 export const app = initializeApp(firebaseConfig);

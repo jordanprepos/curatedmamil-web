@@ -39,6 +39,8 @@ python3 -m http.server 8000
 | `assets/site.js` | builds every `wa.me` link from one `WHATSAPP_NUMBER` |
 | `assets/catalog.js` | catalog search, category filter, save hearts |
 | `assets/firebase.js` | Firebase app + Analytics init (modular SDK from the CDN) |
+| `assets/catalog-live.js` | reads active products from the shared Firestore |
+| `firestore.rules` | Security Rules, deployed with `firebase deploy --only firestore` |
 
 Each page keeps its own layout in an inline `<style>` block, which loads after
 `site.css` and so wins on equal specificity.
@@ -75,16 +77,17 @@ hearts are in-session only, matching the design.
 
 ## Firebase
 
-Project `curated-mamil` (project number 933806785731). Because the site has no
-build step, `assets/firebase.js` loads the modular SDK from `gstatic.com` (pinned
-to 12.17.1) instead of npm, and every page includes it as `<script type="module">`.
+The site runs on **`mamiel-project`** — the same Firebase project as the Mami L
+dashboard app, so the two share one Firestore. The catalog reads the dashboard's
+`products` collection live; bags marked `Aktif` are published, everything else
+stays private. Analytics is active.
 
-**Analytics is not active.** Google Analytics has not been linked to this project,
-so no `measurementId` exists and `analyticsReady` resolves to `null`. To turn it
-on: enable Google Analytics for the project in the Firebase console, then add the
-`G-XXXXXXX` it issues to `firebaseConfig` — the code picks it up from there. The
-`isSupported()` guard additionally keeps it quiet when the files are opened
-straight from disk rather than served.
+Because the site has no build step, `assets/firebase.js` loads the modular SDK
+from `gstatic.com` (pinned to 12.17.1) instead of npm, and every page includes it
+as `<script type="module">`.
+
+See [PROJECT.md §7](PROJECT.md) for the product schema, the Security Rules and
+how the live catalog falls back to static markup.
 
 To add Firestore, Auth, or Storage, import from the same pinned version inside
 `assets/firebase.js` and export the instance; pages can then

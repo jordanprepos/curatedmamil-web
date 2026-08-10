@@ -1,0 +1,45 @@
+rules_version = '2';
+
+// Curated by Mami L — owner-only seller dashboard, plus a public storefront.
+//
+// Access is gated on the presence of an owners/{uid} marker document rather
+// than a hardcoded UID, so access can be granted or revoked from the console
+// without a rules deploy. The marker collection itself is never client-writable.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/owners/$(request.auth.uid));
+    }
+
+    // The public website reads this collection, so bags that are on the shelf
+    // are world-readable. Anything not "Aktif" — sold, archived, on hold —
+    // stays private, and every write is still owner-only.
+    //
+    // Note this constrains queries as well as gets: a client listing this
+    // collection must filter on status == "Aktif" or the read is rejected.
+    match /products/{productId} {
+      allow read: if resource.data.status == 'Aktif' || isOwner();
+      allow write: if isOwner();
+    }
+
+    match /orders/{orderId} {
+      allow read, write: if isOwner();
+    }
+
+    match /shop/{docId} {
+      allow read, write: if isOwner();
+    }
+
+    // Readable only by the owner it describes; writes are console/admin only.
+    match /owners/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
