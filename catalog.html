@@ -81,6 +81,88 @@
      (0,2,0) so it also beats the shared ≤900px height rule. */
   .product__media .image-slot,
   .product__media .slot-photo { height: 100%; border-radius: 0; }
+
+  /* ---- Per-bag photo gallery ----
+     A stack, not a scroller: every photo fills the media box and only the
+     active one is shown, so a card being filtered out (display: none) can
+     never desync the position the way a scroll offset would. catalog.js
+     drives it; the markup already marks slide one active, so a bag still
+     shows its cover photo with JS off. Bags with a single photo get no
+     gallery at all — the bare <img> as before. */
+  .gallery { position: absolute; inset: 0; }
+  .gallery__photo {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    /* visibility is delayed so it does not cut the fade short on the way out */
+    transition: opacity 220ms ease, visibility 0s linear 220ms;
+  }
+  .gallery__photo.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 220ms ease;
+  }
+
+  /* Always visible rather than revealed on hover — most of this shop's
+     traffic is a phone, where there is no hover to reveal them with. */
+  .gallery__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(253, 251, 247, 0.82);
+    color: var(--espresso);
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+  .gallery__nav:hover { background: var(--cream); }
+  .gallery__nav--prev { left: 10px; }
+  .gallery__nav--next { right: 10px; }
+
+  .gallery__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    display: flex;
+    justify-content: center;
+  }
+  /* The button is a 22px tap target; the visible dot is the ::before, so it
+     can stay small without becoming impossible to hit on a phone. */
+  .gallery__dot {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gallery__dot::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(253, 251, 247, 0.55);
+    box-shadow: 0 0 3px rgba(58, 42, 30, 0.45);
+    transition: background 160ms ease, transform 160ms ease;
+  }
+  .gallery__dot[aria-current="true"]::before {
+    background: var(--cream);
+    transform: scale(1.35);
+  }
   .product__fav {
     position: absolute;
     top: 14px;
@@ -183,7 +265,22 @@
 
         <article class="product" data-name="Elara Tote" data-cat="Totes">
           <div class="product__media">
-            <div class="image-slot">Elara Tote</div>
+            <!-- A hand-written gallery. Swap each .image-slot for
+                 <img class="slot-photo gallery__photo" src="..." alt="..."> when the
+                 real photos land, keeping "is-active" on the first one. A bag with a
+                 single photo needs none of this — just the bare .slot-photo img. -->
+            <div class="gallery" data-index="0" role="group" aria-label="Photos of Elara Tote">
+              <div class="image-slot gallery__photo is-active">Elara Tote</div>
+              <div class="image-slot gallery__photo">Elara Tote — side</div>
+              <div class="image-slot gallery__photo">Elara Tote — inside</div>
+              <button class="gallery__nav gallery__nav--prev" type="button" data-step="-1" aria-label="Previous photo of Elara Tote">‹</button>
+              <button class="gallery__nav gallery__nav--next" type="button" data-step="1" aria-label="Next photo of Elara Tote">›</button>
+              <div class="gallery__dots">
+                <button class="gallery__dot" type="button" data-goto="0" aria-label="Photo 1 of 3" aria-current="true"></button>
+                <button class="gallery__dot" type="button" data-goto="1" aria-label="Photo 2 of 3"></button>
+                <button class="gallery__dot" type="button" data-goto="2" aria-label="Photo 3 of 3"></button>
+              </div>
+            </div>
             <button class="product__fav" type="button" aria-pressed="false" aria-label="Save Elara Tote">♥</button>
           </div>
           <div class="product__body">

@@ -33,6 +33,11 @@ const CATEGORY_LABELS = {
 
 const PUBLISHED_STATUS = "Aktif";
 
+/* Matches MAX_PHOTOS in the dashboard's "Tambah" screen. Nothing in Firestore
+   or the Security Rules enforces that ceiling, so it is re-applied here rather
+   than trusted: a document with a hundred URLs must not build a hundred nodes. */
+const MAX_PHOTOS = 8;
+
 function formatPrice(value) {
   const n = Number(value);
   if (!Number.isFinite(n)) return "";
@@ -56,22 +61,114 @@ function safePhotoUrl(value) {
   }
 }
 
-/* A real photo when the bag has one, the captioned placeholder when it doesn't.
-   Both classes share their sizing rules in site.css, so the grid is unchanged. */
-function buildSlot(bag) {
-  if (bag.photo) {
-    const img = document.createElement("img");
-    img.className = "slot-photo";
-    img.src = bag.photo;
-    img.alt = bag.name;
-    img.loading = "lazy";
-    return img;
+/* Every photo on a bag, in display order.
+
+   The dashboard's schema (dashboard-curatedmamil/src/data/products.ts) writes
+   `imageUrls` — the whole gallery, cover first — and keeps the cover duplicated
+   in `imageUrl` precisely so this site keeps working. So `imageUrls` wins when
+   it is there and `imageUrl` is the fallback for bags written before galleries
+   existed; there is no backfill, and reading the two together is what stands in
+   for one. Never concatenate them — the cover is in both, and it would show up
+   twice.
+
+   Deduped by resolved href as well, since the owner can paste a URL that is
+   also one of the uploads, and capped at MAX_PHOTOS. */
+function collectPhotos(data) {
+  const raw = Array.isArray(data.imageUrls) && data.imageUrls.length
+    ? data.imageUrls
+    : [data.imageUrl];
+
+  const seen = new Set();
+  const photos = [];
+
+  for (const value of raw) {
+    const url = safePhotoUrl(value);
+    if (!url || seen.has(url)) continue;
+    seen.add(url);
+    photos.push(url);
+    if (photos.length === MAX_PHOTOS) break;
   }
 
-  const slot = document.createElement("div");
-  slot.className = "image-slot";
-  slot.textContent = bag.name;
-  return slot;
+  return photos;
+}
+
+function buildPhoto(bag, index) {
+  const img = document.createElement("img");
+  img.className = "slot-photo";
+  img.src = bag.photos[index];
+  /* The first photo is the bag; the rest are the same bag from another angle,
+     so they are numbered rather than repeating the name verbatim. */
+  img.alt = index === 0
+    ? bag.name
+    : bag.name + " — photo " + (index + 1) + " of " + bag.photos.length;
+  /* Defers photos on cards below the fold. It does not defer the other slides
+     of a gallery: they are stacked on top of each other, so once the card is on
+     screen every one of them is in the viewport and fetches. Fine at this shop's
+     size — revisit with a data-src swap if a bag ever carries eight photos. */
+  img.loading = "lazy";
+  return img;
+}
+
+/* The card's media box. Three shapes, and the first two are exactly what this
+   file has always produced — a bag with one photo gains no gallery chrome:
+
+     no photos  → the captioned .image-slot placeholder
+     one photo  → a bare <img class="slot-photo">
+     two or more→ a .gallery stack with arrows and dots, driven by catalog.js
+
+   .image-slot and .slot-photo share their sizing rules in site.css, so the grid
+   is unchanged either way. */
+function buildMedia(bag) {
+  if (!bag.photos.length) {
+    const slot = document.createElement("div");
+    slot.className = "image-slot";
+    slot.textContent = bag.name;
+    return slot;
+  }
+
+  if (bag.photos.length === 1) return buildPhoto(bag, 0);
+
+  const gallery = document.createElement("div");
+  gallery.className = "gallery";
+  gallery.dataset.index = "0";
+  gallery.setAttribute("role", "group");
+  gallery.setAttribute("aria-label", "Photos of " + bag.name);
+
+  const dots = document.createElement("div");
+  dots.className = "gallery__dots";
+
+  bag.photos.forEach(function (url, i) {
+    const photo = buildPhoto(bag, i);
+    photo.classList.add("gallery__photo");
+    if (i === 0) photo.classList.add("is-active");
+    gallery.append(photo);
+
+    const dot = document.createElement("button");
+    dot.className = "gallery__dot";
+    dot.type = "button";
+    dot.dataset.goto = String(i);
+    dot.setAttribute("aria-label", "Photo " + (i + 1) + " of " + bag.photos.length);
+    if (i === 0) dot.setAttribute("aria-current", "true");
+    dots.append(dot);
+  });
+
+  gallery.append(
+    buildNav("prev", "Previous photo of " + bag.name, "‹"),
+    buildNav("next", "Next photo of " + bag.name, "›"),
+    dots
+  );
+
+  return gallery;
+}
+
+function buildNav(direction, label, glyph) {
+  const btn = document.createElement("button");
+  btn.className = "gallery__nav gallery__nav--" + direction;
+  btn.type = "button";
+  btn.dataset.step = direction === "prev" ? "-1" : "1";
+  btn.setAttribute("aria-label", label);
+  btn.textContent = glyph;
+  return btn;
 }
 
 /* Built with DOM methods rather than innerHTML: these values come from the
@@ -85,8 +182,6 @@ function buildCard(bag) {
   const media = document.createElement("div");
   media.className = "product__media";
 
-  const slot = buildSlot(bag);
-
   const fav = document.createElement("button");
   fav.className = "product__fav";
   fav.type = "button";
@@ -94,7 +189,8 @@ function buildCard(bag) {
   fav.setAttribute("aria-label", "Save " + bag.name);
   fav.textContent = "♥";
 
-  media.append(slot, fav);
+  // The heart stays last so it keeps painting over the photos.
+  media.append(buildMedia(bag), fav);
 
   const body = document.createElement("div");
   body.className = "product__body";
@@ -143,7 +239,7 @@ async function loadCatalog() {
         name: String(d.name || "").trim(),
         price: formatPrice(d.price),
         category: CATEGORY_LABELS[d.cat] || d.cat || "",
-        photo: safePhotoUrl(d.imageUrl)
+        photos: collectPhotos(d)
       };
     })
     .filter(function (b) {
