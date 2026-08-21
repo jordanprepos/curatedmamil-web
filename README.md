@@ -36,11 +36,13 @@ python3 -m http.server 8000
 | `best-sellers.html` | `Best Sellers.dc.html` |
 | `about.html` | `About.dc.html` |
 | `assets/site.css` | shared chrome — tokens, header, page header, footer, buttons, image slots, How to Order, chat pill |
-| `assets/site.js` | builds every `wa.me` link from one `WHATSAPP_NUMBER` |
+| `assets/site.js` | builds every `wa.me` link from one number, and normalises it |
 | `assets/catalog.js` | catalog search, category filter, save hearts |
 | `assets/firebase.js` | Firebase app + Analytics init (modular SDK from the CDN) |
 | `assets/catalog-live.js` | reads active products from the shared Firestore |
-| `firestore.rules` | Security Rules, deployed with `firebase deploy --only firestore` |
+| `assets/best-sellers-live.js` | the same, for the Best Sellers grid |
+| `assets/shop-live.js` | reads the WhatsApp number the dashboard stores in `shop/config` |
+| `firestore.rules` | Security Rules, deployed with `firebase deploy --only firestore:rules` |
 
 Each page keeps its own layout in an inline `<style>` block, which loads after
 `site.css` and so wins on equal specificity.
@@ -99,13 +101,30 @@ and App Check, neither of which is set up yet. Worth doing before storing any
 customer data: restrict the API key to your domains in the Google Cloud console,
 and write Security Rules for whatever products you enable.
 
+## Deploying
+
+The site is hosted on Firebase Hosting, in the same `mamiel-project` it reads
+Firestore from, so one command ships the site and the Security Rules together.
+`.firebaserc` pins the project, so no `--project` flag is needed.
+
+Check what would be uploaded, share a temporary copy, then publish:
+
+```bash
+firebase deploy --only hosting --dry-run
+firebase hosting:channel:deploy preview --expires 7d
+firebase deploy
+```
+
+`public` is the repo root — there is no build step, the folder *is* the site.
+Documentation and `firestore.rules` are excluded by the `ignore` list in
+`firebase.json`. See [PROJECT.md](PROJECT.md) for why there is deliberately no
+`cleanUrls` or SPA rewrite.
+
 ## Before this goes live
 
-1. **WhatsApp number.** `WHATSAPP_NUMBER` in `assets/site.js` is still the design's
-   placeholder `6281234567890`. It drives every chat link on every page.
-2. **Collection photos.** Replace each `<div class="image-slot">` with
+1. **Collection photos.** Replace each `<div class="image-slot">` with
    `<img class="slot-photo" src="assets/…" alt="…">`.
-3. **Newsletter form.** The `.signup` form on Home posts to `#`; wire it to a real
+2. **Newsletter form.** The `.signup` form on Home posts to `#`; wire it to a real
    mailing-list endpoint.
 
 All five pages from the design project are implemented.
