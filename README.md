@@ -117,8 +117,12 @@ firebase deploy
 
 `public` is the repo root — there is no build step, the folder *is* the site.
 Documentation and `firestore.rules` are excluded by the `ignore` list in
-`firebase.json`. See [PROJECT.md](PROJECT.md) for why there is deliberately no
-`cleanUrls` or SPA rewrite.
+`firebase.json`.
+
+**[DEPLOY.md](DEPLOY.md) is the step-by-step runbook** — first-time CLI setup,
+the preview-channel workflow, rollback, and troubleshooting. See
+[PROJECT.md §10](PROJECT.md) for why there is deliberately no `cleanUrls` or SPA
+rewrite.
 
 ## Before this goes live
 
