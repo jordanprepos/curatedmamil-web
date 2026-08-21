@@ -1,0 +1,6 @@
+# Firebase CLI deploy cache (hashes of uploaded files) — regenerated each deploy.
+.firebase/
+
+# Firebase CLI writes these next to firebase.json when a command fails.
+firebase-debug.log
+firestore-debug.log

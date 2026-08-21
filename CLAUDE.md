@@ -95,9 +95,17 @@ from the database.
 has its own copy at `dashboard-curatedmamil/firebase/firestore.rules` that
 deploys to the **same project**, so the two files must be kept identical —
 whichever repo deploys last wins. Deploy from here with
-`firebase deploy --only firestore:rules --project mamiel-project` (this repo has
-no `.firebaserc`, hence the explicit `--project`). Everything is owner-only
-except public read of active products and of `shop/config`.
+`firebase deploy --only firestore:rules` — `.firebaserc` pins the project, so no
+`--project` flag is needed. Everything is owner-only except public read of active
+products and of `shop/config`.
+
+**Hosting**: `firebase.json` also carries a `hosting` block serving the repo root
+(`"public": "."`) — no build step, the folder is the site. Docs and
+`firestore.rules` are excluded by `ignore`. There is deliberately **no
+`cleanUrls`** (extensionless URLs 404 under `python3 -m http.server`, breaking the
+local preview) and **no SPA rewrite** (this is five real pages; a `**` rewrite
+would swallow every 404). HTML is served `no-cache` and `assets/**` for an hour —
+short on purpose, because filenames are not content-hashed.
 
 **`assets/best-sellers-live.js`** (best-sellers.html only): the same pattern for
 the `.best__grid`. The products collection has **no best-seller flag**, so it
@@ -139,4 +147,3 @@ Tracked in detail in PROJECT.md § "Known gaps":
    nothing keeps them in sync — publishing or selling a bag in the dashboard
    won't update the hand-written markup.
 5. App Check is not configured (Security Rules are).
-6. No favicon — every page requests `/favicon.ico` and gets a 404.

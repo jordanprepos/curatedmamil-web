@@ -444,6 +444,9 @@ Not in the source designs, added on top:
 - responsive breakpoints and the reduced-motion guard (§4)
 - `aria-current`, `aria-pressed`, `aria-label`s, `role="group"`, `role="status"`
 - `<title>` and `<meta name="description">` per page
+- the `<link rel="icon">` line above the stylesheet — an inline SVG monogram data
+  URI, so the favicon needs no binary asset and no extra request. Copy it
+  verbatim from any existing page.
 - semantic `<main>`, `<header>`, `<footer>`, `<article>`, `<nav>`
 
 ---
@@ -470,7 +473,6 @@ Not in the source designs, added on top:
    `assets/best-sellers-live.js` becomes a real selection (see the comment
    at the top of that file).
 6. **No App Check.** Rules are in place (§7) but App Check is not configured.
-7. **No favicon** — every page requests `/favicon.ico` and gets a 404.
 
 ### Cosmetic, noted but not changed
 
@@ -480,3 +482,43 @@ Not in the source designs, added on top:
   corners, since the artwork is a circle inside a square.
 - At 44px in the header the full lockup isn't legible. A mark-only variant
   (bag and monogram, no wordmark) would read better at that size.
+
+---
+
+## 10. Deploying
+
+Firebase Hosting, on the same `mamiel-project` the site reads Firestore from.
+`.firebaserc` pins the project, so no `--project` flag is needed anywhere.
+
+```bash
+firebase deploy --only hosting --dry-run          # what would upload
+firebase hosting:channel:deploy preview --expires 7d   # temporary shareable URL
+firebase deploy                                   # site + Security Rules, live
+```
+
+`firebase deploy` with no flags ships **both** the site and `firestore.rules`, so
+the storefront and the rules it depends on cannot drift apart.
+
+### What the config does, and what it deliberately does not
+
+`"public": "."` — the repo root is the site; there is no build output to point
+at. `ignore` drops `firebase.json`, `firestore.rules`, every `.md`, and (via the
+`**/.*` default) `.firebaserc`, `.claude/`, and `.git/`.
+
+Two things are **intentionally absent**, so please don't add them:
+
+- **`cleanUrls`.** It would serve `/about` and 301-redirect `/about.html` — but
+  extensionless URLs 404 under `python3 -m http.server`, which is the documented
+  local preview (`.claude/launch.json`). Keeping `.html` means the local server
+  and Hosting behave identically, and none of the 63 internal links pay a
+  redirect hop.
+- **A `**` → `/index.html` rewrite.** That is the SPA pattern. This site is five
+  real pages; the rewrite would turn every genuine 404 into the homepage.
+
+Cache headers are short by design: HTML is `no-cache`, `assets/**` is
+`max-age=3600`. Filenames are never content-hashed — `site.js` and `site.css`
+keep those names forever — so a long cache would strand visitors on old code,
+including a stale fallback WhatsApp number.
+
+Analytics only reports from a real http(s) origin, so the deployed site is the
+first place `G-SJP0HVJFN3` actually receives anything.
