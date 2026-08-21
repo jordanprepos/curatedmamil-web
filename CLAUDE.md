@@ -69,9 +69,13 @@ isn't a phone number, keeping the fallback rather than shipping a dead link.
 
 **`assets/catalog.js`**: progressive enhancement for `catalog.html` only —
 category filter, name search (`input` event, not `change`, so the grid narrows
-live), and save-heart toggles (`aria-pressed`, in-session only, no persistence).
-Bails out silently if the page doesn't have the expected `.js-search`/`.js-cats`/
-`.product` elements, so it's safe to include site-wide if needed later.
+live), save-heart toggles (`aria-pressed`, in-session only, no persistence), and
+the per-bag photo galleries. Which photo shows is the `is-active` class on a
+stack of absolutely positioned images, never a scroll offset — a filtered-out
+card is `display: none` and has zero width, so a scroll-derived index would
+desync. Bails out silently if the page doesn't have the expected
+`.js-search`/`.js-cats`/`.product` elements, so it's safe to include site-wide if
+needed later.
 
 **`assets/firebase.js`**: initializes the Firebase app (project `mamiel-project`
 — the same project the Mami L dashboard app uses, so both share one Firestore)
@@ -90,6 +94,17 @@ the dashboard's Indonesian categories (Tote/Selempang/Bahu/Clutch) onto the
 site's filter labels and formats the integer `price` as rupiah. Cards are built
 with `createElement`/`textContent`, never `innerHTML`, since the values come
 from the database.
+
+Photos come from two fields that are **read together, never concatenated**:
+`imageUrls` (the whole gallery, cover first) wins when present, and `imageUrl`
+(the cover, which the dashboard duplicates there precisely because this site
+reads it) is the fallback for bags saved before galleries existed. Concatenating
+would show the cover twice. `collectPhotos()` also rejects non-http(s) URLs,
+dedupes, and caps at 8 to match the dashboard's own `MAX_PHOTOS` — a ceiling
+neither Firestore nor the Rules enforce. A card then renders as a placeholder
+(no photos), a bare `<img class="slot-photo">` (one), or a `.gallery` stack with
+arrows and dots (two or more); the single-photo card is byte-for-byte what it
+always was.
 
 **`firestore.rules`**: Security Rules for `mamiel-project`. The dashboard repo
 has its own copy at `dashboard-curatedmamil/firebase/firestore.rules` that
@@ -126,6 +141,10 @@ Because the grid can be replaced at runtime, `catalog.js` never caches the
 product nodes and handles the hearts by delegation; `site.js` exposes
 `window.CBML.wireWaLinks()` so re-rendered order links get their `wa.me` hrefs.
 
+Gallery markup and CSS live in `catalog.html` (page-local `<style>`, per the
+rule above) — Best Sellers has no galleries, so none of it is in `site.css`, and
+`best-sellers-live.js` still shows one photo per bag.
+
 **`<image-slot>` placeholders**: the source design's `<image-slot>` custom
 element was resolved to plain `<div class="image-slot">` divs carrying the
 original caption text. To land a real photo, replace one with
@@ -138,9 +157,9 @@ Tracked in detail in PROJECT.md § "Known gaps":
 1. The WhatsApp number now comes from `shop/config` in Firestore (set on the
    dashboard's "Lainnya" tab); `WHATSAPP_NUMBER` in `assets/site.js` is the
    offline fallback and must be kept in sync by hand if the number changes.
-2. Every `.image-slot` (11 in the markup, plus one per live Firestore bag on
-   Catalog and Best Sellers) needs a real photo per the swap
-   above.
+2. Every `.image-slot` (13 in the markup — the Elara Tote fallback carries a
+   three-placeholder gallery — plus one per live Firestore bag on Catalog and
+   Best Sellers) needs a real photo per the swap above.
 3. The `.signup` form on `index.html` posts to `#` — no real mailing-list
    endpoint is wired up.
 4. The two fallback lists were synced to the `Aktif` bags on 2026-08-11, but

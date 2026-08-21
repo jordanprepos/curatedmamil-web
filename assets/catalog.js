@@ -1,13 +1,17 @@
 /* ============================================================
    Curated By Mami L — catalog filtering
    Progressive enhancement over the product markup: category
-   filter, name search, and the save hearts. Without JS every bag
-   is still listed and every Order link still opens WhatsApp.
+   filter, name search, the save hearts, and the per-bag photo
+   galleries. Without JS every bag is still listed, every Order
+   link still opens WhatsApp, and each gallery shows its cover
+   photo — the first slide is marked active in the markup, so
+   nothing here has to run for a card to look right.
 
    Products may be re-rendered from Firestore by catalog-live.js,
-   so nothing here caches the product nodes and the hearts are
-   handled by delegation. Exposes window.CBML.applyCatalogFilters()
-   for the live loader to call after it swaps the grid.
+   so nothing here caches the product nodes and the hearts and
+   galleries are handled by delegation. Exposes
+   window.CBML.applyCatalogFilters() for the live loader to call
+   after it swaps the grid.
    ============================================================ */
 
 (function () {
@@ -50,14 +54,62 @@
     apply();
   });
 
-  // Saved bags are in-session only, same as the design. Delegated so it keeps
-  // working after the grid is re-rendered.
-  grid.addEventListener("click", function (e) {
-    var btn = e.target.closest(".product__fav");
-    if (!btn) return;
+  /* ---- Photo galleries ----
+     The slides are a stack, not a scroller: which one shows is a class, so
+     there is no scroll position to read back. That matters here because
+     .product[hidden] collapses a filtered-out card to zero width, which would
+     break any index-from-scroll maths. Wraps around at both ends. */
+  function showPhoto(gallery, index) {
+    var photos = gallery.querySelectorAll(".gallery__photo");
+    if (photos.length < 2) return;
 
-    var faved = btn.getAttribute("aria-pressed") === "true";
-    btn.setAttribute("aria-pressed", String(!faved));
+    var next = ((index % photos.length) + photos.length) % photos.length;
+    gallery.dataset.index = String(next);
+
+    photos.forEach(function (photo, i) {
+      photo.classList.toggle("is-active", i === next);
+    });
+
+    gallery.querySelectorAll(".gallery__dot").forEach(function (dot, i) {
+      if (i === next) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+  }
+
+  // Saved bags are in-session only, same as the design. Delegated — along with
+  // the gallery controls — so it keeps working after the grid is re-rendered.
+  grid.addEventListener("click", function (e) {
+    var fav = e.target.closest(".product__fav");
+    if (fav) {
+      var faved = fav.getAttribute("aria-pressed") === "true";
+      fav.setAttribute("aria-pressed", String(!faved));
+      return;
+    }
+
+    var control = e.target.closest(".gallery__nav, .gallery__dot");
+    if (!control) return;
+
+    var gallery = control.closest(".gallery");
+    if (!gallery) return;
+
+    var current = Number(gallery.dataset.index) || 0;
+    var target = control.dataset.goto !== undefined
+      ? Number(control.dataset.goto)
+      : current + Number(control.dataset.step || 0);
+
+    showPhoto(gallery, target);
+  });
+
+  // Left/right arrows move the gallery whose control has focus.
+  grid.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+
+    var gallery = e.target.closest ? e.target.closest(".gallery") : null;
+    if (!gallery) return;
+
+    e.preventDefault();
+    var current = Number(gallery.dataset.index) || 0;
+    showPhoto(gallery, current + (e.key === "ArrowRight" ? 1 : -1));
   });
 
   window.CBML = window.CBML || {};

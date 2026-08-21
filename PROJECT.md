@@ -225,9 +225,17 @@ Progressive enhancement over the static product markup:
 - **Empty state** — "No bags match that search." appears when nothing matches.
 - **Save hearts** — `aria-pressed` toggles the gold fill. **In-session only, no
   persistence**, matching the design.
+- **Photo galleries** — the prev/next arrows and the dots on a bag with more
+  than one photo. Which photo shows is the `is-active` class on a stack of
+  absolutely positioned images, not a scroll offset: a filtered-out card is
+  `display: none` and has zero width, so any index read back from scroll
+  position would desync. Wraps around at both ends; the left/right arrow keys
+  move whichever gallery holds focus.
 
 It bails out silently if the expected `.js-search` / `.js-cats` / `.product`
-elements aren't present, so it's safe to load on other pages.
+elements aren't present, so it's safe to load on other pages. The hearts and the
+galleries are both handled by delegation on the grid, so they keep working after
+`catalog-live.js` replaces its contents.
 
 ### `assets/firebase.js` — Firebase
 
@@ -265,6 +273,32 @@ in `catalog.html` and edit four things:
 - `data-wa-message` — repeat the name and price here
 
 Best Sellers works the same way, minus `data-cat` and the heart.
+
+**More than one photo.** A bag with a single photo stays exactly as above — a
+lone `.image-slot` (or `.slot-photo` img) in the media box, no extra chrome. For
+a gallery, wrap the photos in a `.gallery` and add the controls; `catalog.js`
+finds them by delegation, and the first slide carries `is-active` so the cover
+photo still shows with JavaScript off:
+
+```html
+<div class="gallery" data-index="0" role="group" aria-label="Photos of Elara Tote">
+  <img class="slot-photo gallery__photo is-active" src="assets/elara-1.jpg" alt="Elara Tote">
+  <img class="slot-photo gallery__photo" src="assets/elara-2.jpg" alt="Elara Tote — photo 2 of 3">
+  <img class="slot-photo gallery__photo" src="assets/elara-3.jpg" alt="Elara Tote — photo 3 of 3">
+  <button class="gallery__nav gallery__nav--prev" type="button" data-step="-1" aria-label="Previous photo of Elara Tote">‹</button>
+  <button class="gallery__nav gallery__nav--next" type="button" data-step="1" aria-label="Next photo of Elara Tote">›</button>
+  <div class="gallery__dots">
+    <button class="gallery__dot" type="button" data-goto="0" aria-label="Photo 1 of 3" aria-current="true"></button>
+    <button class="gallery__dot" type="button" data-goto="1" aria-label="Photo 2 of 3"></button>
+    <button class="gallery__dot" type="button" data-goto="2" aria-label="Photo 3 of 3"></button>
+  </div>
+</div>
+```
+
+The heart must stay the **last** child of `.product__media` so it keeps painting
+over the photos. The gallery CSS is page-local, in `catalog.html`'s `<style>`
+block — Best Sellers has no galleries, so it is not in `site.css`. The Elara Tote
+fallback card is written this way with three placeholders, as the worked example.
 
 Both grids are now no-JS fallbacks — the live pages come from Firestore, so
 Firestore is the source of truth for stock and this markup only has to mirror
@@ -345,11 +379,28 @@ The dashboard owns the data; the website only reads it.
 | `cat` | string | **Indonesian**: `Tote`, `Selempang`, `Clutch`, `Bahu` |
 | `status` | string | `Aktif`, `Ditahan`, `Terjual`, `Arsip` |
 | `sku` | string | e.g. `CBML-001` |
+| `imageUrl` | string? | the cover photo's download URL — also `imageUrls[0]` |
+| `imageUrls` | string[]? | every photo, cover first, in display order |
 | `createdAt` / `updatedAt` / `soldAt` | timestamp | |
 
 `assets/catalog-live.js` maps the categories to the site's filter labels —
 Tote→Totes, Selempang→Crossbody, Bahu→Shoulder, Clutch→Clutch — and formats
 `price` with `toLocaleString("id-ID")`.
+
+**The two photo fields are read together, never concatenated.** `imageUrls` is
+the source of truth once it is present; bags saved before the dashboard grew
+galleries carry only `imageUrl`, and there is no backfill, so the fallback is
+what stands in for one. The dashboard keeps the cover duplicated across both
+fields deliberately, *because this site reads `imageUrl`* — which also means
+concatenating them would show the cover twice. `collectPhotos()` implements
+exactly that rule, drops anything that is not an http(s) URL, dedupes by
+resolved href, and caps the list at 8 to match the dashboard's `MAX_PHOTOS`
+(nothing in Firestore or the Rules enforces that ceiling, so it is re-applied
+rather than trusted).
+
+A card's media box then takes one of three shapes: no photos → the captioned
+`.image-slot` placeholder; one photo → a bare `<img class="slot-photo">`; two or
+more → a `.gallery` stack with arrows and dots, driven by `catalog.js`.
 
 ### Security Rules
 
@@ -388,7 +439,7 @@ than cosmetic — removing it breaks the page with `permission-denied`.
    filter was active.
 
 Because the grid can be replaced, `catalog.js` never caches the product nodes
-and handles the hearts by delegation.
+and handles the hearts and the gallery controls by delegation.
 
 Cards are built with `createElement`/`textContent`, never `innerHTML` — the
 values come from a database and are treated as untrusted text.
@@ -457,22 +508,28 @@ Not in the source designs, added on top:
    `shop/config` in Firestore (dashboard → "Lainnya"), but `WHATSAPP_NUMBER` in
    `assets/site.js` is a hand-maintained copy used when that read fails. Nothing
    keeps the two in sync.
-2. **All product and collection photos are placeholders.** 11 `.image-slot` divs
-   in the markup — 3 on Home, 3 on Collections, 2 on Catalog, 2 on Best Sellers,
-   1 on About. Catalog and Best Sellers are the fallback lists only; the live
-   grids build one slot per bag returned by Firestore, so the real number of
-   photos needed tracks the active stock.
+2. **All product and collection photos are placeholders.** 13 `.image-slot` divs
+   in the markup — 3 on Home, 3 on Collections, 4 on Catalog, 2 on Best Sellers,
+   1 on About. Catalog counts four because the Elara Tote fallback card is the
+   worked multi-photo example and carries three. Catalog and Best Sellers are the
+   fallback lists only; the live grids build one slot per bag returned by
+   Firestore — and now one per *photo* on a bag with a gallery — so the real
+   number of photos needed tracks the active stock.
 3. **The newsletter form posts to `#`.** `.signup` on Home needs a real
    mailing-list endpoint.
 4. **The fallback lists need re-syncing whenever stock changes.** Both grids were
    trimmed to the `Aktif` bags on 2026-08-11, but nothing enforces this — a bag
    published or sold in the dashboard will not update the hand-written markup.
-5. **Best Sellers is not really curated.** It reads Firestore, but the products
+5. **Best Sellers shows one photo per bag.** Galleries were added to the catalog
+   only, so `assets/best-sellers-live.js` still renders the cover photo alone —
+   it carries its own copy of the photo helpers rather than sharing the
+   catalog's, since there is no build step to share a module with.
+6. **Best Sellers is not really curated.** It reads Firestore, but the products
    collection has no best-seller flag, so it just shows the first three `Aktif`
    bags. Add a `bestSeller` boolean in the dashboard and the query in
    `assets/best-sellers-live.js` becomes a real selection (see the comment
    at the top of that file).
-6. **No App Check.** Rules are in place (§7) but App Check is not configured.
+7. **No App Check.** Rules are in place (§7) but App Check is not configured.
 
 ### Cosmetic, noted but not changed
 
