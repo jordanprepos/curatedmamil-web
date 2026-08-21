@@ -143,11 +143,26 @@ firebase deploy --only firestore:rules
 
 The `ignore` list in `firebase.json` keeps the working files off the public
 internet: every `.md` file (this one included), `firestore.rules`, `firebase.json`,
-`.firebaserc`, and anything starting with a dot. You can confirm any time —
-these should all return "not found":
+`.firebaserc`, and dot-files and dot-folders — `.git` and `.claude` included.
+
+**That last one needs two patterns, and both must stay.** `**/.*` only matches a
+path whose *last* segment starts with a dot, so on its own it hides `.firebaserc`
+but not `.git/objects/ab/cdef…`. `**/.*/**` is what covers everything *inside* a
+dot-folder. Deleting it as a duplicate re-publishes the entire git history — that
+is exactly what happened between the first Hosting deploy and 2026-08-21, when
+`.git` was live and downloadable.
+
+The deploy output is the quickest tell. It should say **`found 13 files in .`** —
+the five pages plus `assets/`. A number in the hundreds means the ignore list is
+broken again, so stop and fix it before releasing.
+
+You can confirm any time — the first two should return "not found" (404) and the
+last one 200:
 
 ```bash
 curl -o /dev/null -w '%{http_code}\n' https://mamiel-project.web.app/README.md
+curl -o /dev/null -w '%{http_code}\n' https://mamiel-project.web.app/.git/config
+curl -o /dev/null -w '%{http_code}\n' https://mamiel-project.web.app/index.html
 ```
 
 ---
