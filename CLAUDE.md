@@ -53,8 +53,19 @@ were fixed-desktop.
 
 **`assets/site.js`**: builds every `.js-wa` link's `href` from a single
 `WHATSAPP_NUMBER` constant at the top of the file, so the number lives in one
-place. Message resolution order: link's own `data-wa-message` → `<body
-data-wa-message>` → hardcoded fallback string in the file.
+place. That constant is now only the **fallback** — the real number comes from
+Firestore via `assets/shop-live.js`, which calls the exposed
+`window.CBML.setWhatsAppNumber()`. Message resolution order: link's own
+`data-wa-message` → `<body data-wa-message>` → hardcoded fallback string in the
+file.
+
+**`assets/shop-live.js`** (every page): reads `shop/config` — the document the
+dashboard's "Lainnya" tab writes — and re-wires every `.js-wa` link with the
+`whatsappNumber` stored there, so Mami L changes the number in the app and the
+site follows without a redeploy. wa.me needs full international digits, but the
+dashboard's validator also accepts the local Indonesian form, so `site.js`
+normalises (`08…` and `8…` both become `628…`) and rejects anything that still
+isn't a phone number, keeping the fallback rather than shipping a dead link.
 
 **`assets/catalog.js`**: progressive enhancement for `catalog.html` only —
 category filter, name search (`input` event, not `change`, so the grid narrows
@@ -80,9 +91,13 @@ site's filter labels and formats the integer `price` as rupiah. Cards are built
 with `createElement`/`textContent`, never `innerHTML`, since the values come
 from the database.
 
-**`firestore.rules`** is the source of truth for Security Rules (`firebase.json`
-points at it; deploy with `firebase deploy --only firestore`). Everything is
-owner-only except public read of active products.
+**`firestore.rules`**: Security Rules for `mamiel-project`. The dashboard repo
+has its own copy at `dashboard-curatedmamil/firebase/firestore.rules` that
+deploys to the **same project**, so the two files must be kept identical —
+whichever repo deploys last wins. Deploy from here with
+`firebase deploy --only firestore:rules --project mamiel-project` (this repo has
+no `.firebaserc`, hence the explicit `--project`). Everything is owner-only
+except public read of active products and of `shop/config`.
 
 **`assets/best-sellers-live.js`** (best-sellers.html only): the same pattern for
 the `.best__grid`. The products collection has **no best-seller flag**, so it
@@ -112,8 +127,9 @@ rules in `site.css` so no other CSS changes are needed.
 ## Known gaps before this goes live
 
 Tracked in detail in PROJECT.md § "Known gaps":
-1. `WHATSAPP_NUMBER` in `assets/site.js` is still the design's placeholder
-   (`6281234567890`) — drives every chat link on every page.
+1. The WhatsApp number now comes from `shop/config` in Firestore (set on the
+   dashboard's "Lainnya" tab); `WHATSAPP_NUMBER` in `assets/site.js` is the
+   offline fallback and must be kept in sync by hand if the number changes.
 2. Every `.image-slot` (11 in the markup, plus one per live Firestore bag on
    Catalog and Best Sellers) needs a real photo per the swap
    above.

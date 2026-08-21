@@ -2,6 +2,10 @@ rules_version = '2';
 
 // Curated by Mami L — owner-only seller dashboard, plus a public storefront.
 //
+// This file and dashboard-curatedmamil/firebase/firestore.rules both deploy to
+// mamiel-project, so they must stay identical — the last `firebase deploy`
+// wins. Any change here needs the same change there.
+//
 // Access is gated on the presence of an owners/{uid} marker document rather
 // than a hardcoded UID, so access can be granted or revoked from the console
 // without a rules deploy. The marker collection itself is never client-writable.
@@ -28,8 +32,15 @@ service cloud.firestore {
       allow read, write: if isOwner();
     }
 
+    // shop/config holds the storefront's own settings — the WhatsApp number
+    // Mami L sets on the dashboard's "Lainnya" tab, and the shop name — so the
+    // public website reads it to build its wa.me links. Rules cannot hide
+    // individual fields on a read: EVERYTHING in shop/config is world-readable,
+    // so keep anything private in a different document. Other shop/* documents
+    // stay owner-only, and every write is owner-only.
     match /shop/{docId} {
-      allow read, write: if isOwner();
+      allow read: if docId == 'config' || isOwner();
+      allow write: if isOwner();
     }
 
     // Readable only by the owner it describes; writes are console/admin only.

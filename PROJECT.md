@@ -176,12 +176,24 @@ The source designs were fixed-desktop; the responsive behaviour is added on top.
 
 ## 5. JavaScript
 
-Three files, no dependencies, no bundler.
+Five files, no dependencies, no bundler.
 
 ### `assets/site.js` — WhatsApp links
 
 Every chat link on the site is `<a class="js-wa">` with `href="#"`. This script
 rewrites them all so **the phone number exists in exactly one place**.
+
+The number itself is owned by the dashboard app: Mami L edits it on the
+**"Lainnya"** tab, which writes `shop/config.whatsappNumber`.
+`assets/shop-live.js` reads that document and hands the value to
+`window.CBML.setWhatsAppNumber()`, which normalises it and re-wires every link.
+`WHATSAPP_NUMBER` in `site.js` is the fallback used until that read lands — or
+if it fails, if the document is missing, or if the page was opened off disk.
+
+wa.me only accepts full international digits. The dashboard asks for that but
+its validator lets the local Indonesian form through too, so `site.js` maps
+`08…` and `8…` onto `628…` and discards anything that still doesn't look like a
+number, keeping the fallback rather than building a dead link.
 
 Message resolution order:
 
@@ -286,10 +298,14 @@ so nothing else changes:
 
 ### Change the WhatsApp number
 
-One line, `assets/site.js`:
+In the dashboard app: **Lainnya → Nomor WhatsApp**. The site picks it up on the
+next page load; nothing here needs redeploying.
+
+The fallback in `assets/site.js` is a separate value and only shows when
+Firestore can't be reached, so update it too if the number changes for good:
 
 ```js
-var WHATSAPP_NUMBER = "6281234567890";   // country code, digits only, no +
+var WHATSAPP_NUMBER = "6281244805393";   // country code, digits only, no +
 ```
 
 ### Change a page's default message
@@ -434,9 +450,10 @@ Not in the source designs, added on top:
 
 ## 9. Known gaps
 
-1. **The WhatsApp number is a placeholder.** `WHATSAPP_NUMBER` in
-   `assets/site.js` is still the design's `6281234567890`. It drives every chat
-   link on every page. **This blocks launch.**
+1. **The fallback WhatsApp number can drift.** The live number comes from
+   `shop/config` in Firestore (dashboard → "Lainnya"), but `WHATSAPP_NUMBER` in
+   `assets/site.js` is a hand-maintained copy used when that read fails. Nothing
+   keeps the two in sync.
 2. **All product and collection photos are placeholders.** 11 `.image-slot` divs
    in the markup — 3 on Home, 3 on Collections, 2 on Catalog, 2 on Best Sellers,
    1 on About. Catalog and Best Sellers are the fallback lists only; the live
