@@ -57,6 +57,7 @@ when testing Firebase** — Analytics needs a real http(s) origin and is skipped
 ├── assets/
 │   ├── site.css          shared chrome + design tokens
 │   ├── site.js           builds every wa.me link
+│   ├── i18n.js           Indonesian/English switch + the English strings
 │   ├── catalog.js        catalog search / filter / save hearts
 │   ├── catalog-live.js   reads products from the shared Firestore
 │   ├── firebase.js       Firebase app init
@@ -176,7 +177,47 @@ The source designs were fixed-desktop; the responsive behaviour is added on top.
 
 ## 5. JavaScript
 
-Five files, no dependencies, no bundler.
+Six files, no dependencies, no bundler.
+
+### `assets/i18n.js` — the language switch
+
+The shop's language is **Indonesian**, and that is a decision about the markup,
+not just a default: the visible copy in all five `.html` files is Indonesian,
+`<html lang="id">` says so, and `assets/i18n.js` holds the *English*
+translation of it. Nothing has to run for a first-time visitor to get
+Indonesian — no flash of the wrong language, and the no-JS fallback lists are
+in the right language too.
+
+The header carries an `ID` / `EN` pair (`.lang.js-lang`, styled in `site.css`
+since it is shared chrome) using the same `aria-pressed` idiom as the catalog
+filter pills. The choice is remembered in `localStorage` under `cbml-lang`;
+`navigator.language` is deliberately **not** consulted, so entering the site is
+Indonesian unless the visitor has chosen otherwise on this browser.
+
+Marking a node for translation:
+
+| attribute | effect |
+| --- | --- |
+| `data-i18n="key"` | replaces the element's text |
+| `data-i18n-attr="placeholder:key;aria-label:key2"` | replaces attributes; `;`-separated pairs |
+| `data-i18n-var-name="Elara Tote"` | fills `{name}` in the string |
+
+Any attribute works, **including `data-wa-message`** — that is how the
+prefilled WhatsApp text follows the language. Because `site.js` reads that
+attribute when it builds the `wa.me` hrefs, `applyI18n()` must always run
+*before* `wireWaLinks()`. Both live loaders and the switch handler keep that
+order; `i18n.js` is also loaded before `site.js` in every page's script block
+for the same reason.
+
+Exposed as `window.CBML.t / .applyI18n / .setLanguage / .getLanguage`, so cards
+rendered from Firestore are stamped with keys and re-fill on a switch without
+being re-rendered.
+
+Adding a string: add the key to **both** the `id` and `en` tables in
+`i18n.js`, and make the `id` value byte-identical to what is written in the
+HTML — otherwise switching to English and back would silently reword the page.
+An unknown key renders as the key itself, which is meant to be noticed.
+
 
 ### `assets/site.js` — WhatsApp links
 
@@ -530,6 +571,16 @@ Not in the source designs, added on top:
    `assets/best-sellers-live.js` becomes a real selection (see the comment
    at the top of that file).
 7. **No App Check.** Rules are in place (§7) but App Check is not configured.
+8. **Two copies of the Indonesian copy.** Every string exists once in the HTML
+   and once in `i18n.js`'s `id` table, and nothing checks that they still match.
+   They are identical today; editing the page copy without editing the table
+   means a visitor who switches to English and back gets the old wording.
+9. **The English picker gets a flash of Indonesian.** A returning visitor who
+   chose `EN` sees the Indonesian markup for the instant before `i18n.js` runs.
+   Accepted deliberately: hiding the page until the switch had run would cost
+   every default-language visitor a blank frame to spare the minority.
+10. **`WHATSAPP_FALLBACK_MESSAGE` in `site.js` is English-only.** It is reached
+   only if a page omits `data-wa-message`, which none do.
 
 ### Cosmetic, noted but not changed
 

@@ -80,6 +80,38 @@ img { max-width: 100%; }
 .nav a[aria-current="page"] { color: var(--gold); }
 .nav a:hover { color: var(--espresso); }
 
+/* ---- Language switch ----
+   Header chrome, so it lives here rather than in a page's own <style>.
+   Two states rather than one flip-flop button, so the language you are
+   already reading is visible instead of having to be inferred. Borrows
+   the catalog filter pills' aria-pressed idiom. */
+.lang {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  background: var(--cream);
+}
+.lang__btn {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--taupe);
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+.lang__btn:hover { color: var(--espresso); }
+.lang__btn[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--cream);
+}
+
 /* ---- Shared type ---- */
 .section-title {
   font-family: var(--serif);
@@ -327,6 +359,7 @@ img { max-width: 100%; }
   /* the wrapped 5-item nav makes a sticky header eat too much of a phone screen */
   .header { position: static; flex-direction: column; gap: 14px; padding: 14px 20px; }
   .nav { gap: 22px; flex-wrap: wrap; justify-content: center; font-size: 11.5px; }
+  .lang__btn { padding: 5px 10px; font-size: 11px; }
   .page-head { padding: 52px 20px 40px; }
   .page-head h1 { font-size: 32px; }
   .how { padding: 52px 20px; }

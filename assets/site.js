@@ -21,6 +21,9 @@
 // Keep this in the same international format wa.me expects.
 var WHATSAPP_NUMBER = "6281244805393";
 
+/* English-only, and only ever reached if a page ships without a
+   data-wa-message — none do. The per-page messages follow the language
+   switch instead; see assets/i18n.js. */
 var WHATSAPP_FALLBACK_MESSAGE =
   "Hello Curated By Mami L, I'd like to ask about a bag from your catalog.";
 

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Curated By Mami L — Timeless Elegance, Curated for You</title>
-<meta name="description" content="Every bag in our catalog is in stock and ready to ship. Choose yours, then chat with us on WhatsApp to reserve it.">
+<title data-i18n="home.pageTitle">Curated By Mami L — Keanggunan Abadi, Dikurasi untuk Anda</title>
+<meta name="description" content="Setiap tas di katalog kami tersedia dan siap dikirim. Pilih milik Anda, lalu chat kami di WhatsApp untuk memesannya." data-i18n-attr="content:home.lede">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -85,92 +85,99 @@
   }
 </style>
 </head>
-<body data-wa-message="Hello Curated By Mami L, I'd like to ask about a bag from your catalog.">
+<body data-wa-message="Halo Curated By Mami L, saya ingin bertanya tentang tas di katalog Anda." data-i18n-attr="data-wa-message:home.wa">
 
   <header class="header">
-    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — home">
+    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — beranda" data-i18n-attr="aria-label:brand.homeAria">
       <img src="assets/logo.png" alt="Curated By Mami L">
     </a>
-    <nav class="nav" aria-label="Main">
-      <a href="index.html" aria-current="page">Home</a>
-      <a href="collections.html">Collections</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="about.html">About</a>
+    <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
+      <a href="index.html" aria-current="page" data-i18n="nav.home">Beranda</a>
+      <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
+      <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
+
+    <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
+      <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">ID</button>
+      <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
   </header>
 
   <main>
     <section class="hero">
       <img class="hero__logo" src="assets/logo.png" alt="Curated By Mami L">
-      <h1>Timeless Elegance, Curated for You</h1>
-      <p>Every bag in our catalog is in stock and ready to ship. Choose yours, then chat with us on WhatsApp to reserve it.</p>
-      <a class="btn-primary" href="catalog.html">Explore Collection</a>
+      <h1 data-i18n="home.h1">Keanggunan Abadi, Dikurasi untuk Anda</h1>
+      <p data-i18n="home.lede">Setiap tas di katalog kami tersedia dan siap dikirim. Pilih milik Anda, lalu chat kami di WhatsApp untuk memesannya.</p>
+      <a class="btn-primary" href="catalog.html" data-i18n="home.cta">Lihat Koleksi</a>
     </section>
 
     <section class="styles">
-      <h2 class="section-title">Shop by Style</h2>
+      <h2 class="section-title" data-i18n="home.styles">Belanja per Gaya</h2>
       <div class="styles__grid">
         <a class="style-card" href="collections.html">
-          <div class="image-slot">Totes collection photo</div>
-          <div class="style-card__label">Totes</div>
+          <div class="image-slot" data-i18n="slot.totes">Foto koleksi Tote</div>
+          <div class="style-card__label" data-i18n="cat.totes">Tote</div>
         </a>
         <a class="style-card" href="collections.html">
-          <div class="image-slot">Crossbody collection photo</div>
-          <div class="style-card__label">Crossbody</div>
+          <div class="image-slot" data-i18n="slot.crossbody">Foto koleksi Selempang</div>
+          <div class="style-card__label" data-i18n="cat.crossbody">Selempang</div>
         </a>
         <a class="style-card" href="collections.html">
-          <div class="image-slot">Clutches collection photo</div>
-          <div class="style-card__label">Clutches</div>
+          <div class="image-slot" data-i18n="slot.clutch">Foto koleksi Clutch</div>
+          <div class="style-card__label" data-i18n="cat.clutch">Clutch</div>
         </a>
       </div>
     </section>
 
     <section class="how">
-      <h2 class="section-title">How to Order</h2>
+      <h2 class="section-title" data-i18n="how.title">Cara Memesan</h2>
       <div class="how__grid">
         <div>
           <div class="how__num">01</div>
-          <div class="how__step">Browse the catalog</div>
-          <p>Filter by style or search by name. Everything shown is in stock.</p>
+          <div class="how__step" data-i18n="how.1.step">Jelajahi katalog</div>
+          <p data-i18n="how.1.body">Saring berdasarkan gaya atau cari dari namanya. Semua yang tampil tersedia.</p>
         </div>
         <div>
           <div class="how__num">02</div>
-          <div class="how__step">Tap to order</div>
-          <p>WhatsApp opens with the bag and price already written for you.</p>
+          <div class="how__step" data-i18n="how.2.step">Ketuk untuk memesan</div>
+          <p data-i18n="how.2.body">WhatsApp terbuka dengan nama tas dan harganya sudah dituliskan untuk Anda.</p>
         </div>
         <div>
           <div class="how__num">03</div>
-          <div class="how__step">We hold it for you</div>
-          <p>Confirm payment and delivery in the chat. Each bag is reserved 24 hours.</p>
+          <div class="how__step" data-i18n="how.3.step">Kami simpan untuk Anda</div>
+          <p data-i18n="how.3.body">Konfirmasi pembayaran dan pengiriman lewat chat. Setiap tas kami tahan 24 jam.</p>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <h2>Stay in the Loop</h2>
-    <p class="footer__lede">Be the first to know about new arrivals and exclusive offers.</p>
+    <h2 data-i18n="footer.loop.h2">Tetap Terhubung</h2>
+    <p class="footer__lede" data-i18n="footer.loop.p">Jadilah yang pertama tahu tentang koleksi baru dan penawaran eksklusif.</p>
     <form class="signup" action="#" method="post">
-      <input id="email" name="email" type="email" aria-label="Your email address" placeholder="Your email address" autocomplete="email" required>
-      <button type="submit">Subscribe</button>
+      <input id="email" name="email" type="email" aria-label="Alamat email Anda" placeholder="Alamat email Anda" autocomplete="email" required
+             data-i18n-attr="aria-label:form.email;placeholder:form.email">
+      <button type="submit" data-i18n="form.subscribe">Berlangganan</button>
     </form>
-    <nav class="footer__nav" aria-label="Footer">
-      <a href="index.html">Home</a>
-      <a href="collections.html">Collections</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="about.html">About</a>
+    <nav class="footer__nav" aria-label="Navigasi footer" data-i18n-attr="aria-label:nav.footer">
+      <a href="index.html" data-i18n="nav.home">Beranda</a>
+      <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
+      <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
     <div class="footer__legal">
-      © 2026 Curated By Mami L. All rights reserved. ·
-      <a class="js-wa" href="#" target="_blank" rel="noopener">WhatsApp us</a>
+      <span data-i18n="footer.legal">© 2026 Curated By Mami L. Hak cipta dilindungi.</span> ·
+      <a class="js-wa" href="#" target="_blank" rel="noopener" data-i18n="footer.waUs">Hubungi kami di WhatsApp</a>
     </div>
   </footer>
 
-  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener">Chat with us</a>
+  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener" data-i18n="chat.pill">Chat dengan kami</a>
 
 <script type="module" src="assets/firebase.js"></script>
+<script src="assets/i18n.js"></script>
 <script src="assets/site.js"></script>
 <script type="module" src="assets/shop-live.js"></script>
 </body>
