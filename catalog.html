@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="cat.pageTitle">Katalog Kami — Curated By Mami L</title>
-<meta name="description" content="Semua yang ada di sini tersedia. Ketuk Pesan lewat WhatsApp dan pesannya sudah dituliskan untuk Anda." data-i18n-attr="content:cat.lede">
+<meta name="description" content="Semua yang ada di sini ready stock. Ketuk Pesan lewat WhatsApp dan pesannya sudah dituliskan untuk kamu." data-i18n-attr="content:cat.lede">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -220,30 +220,32 @@
   }
 </style>
 </head>
-<body data-wa-message="Halo Curated By Mami L, saya mencari tas yang belum ada di katalog." data-i18n-attr="data-wa-message:cat.wa">
+<body data-wa-message="Halo Curated By Mami L, saya lagi cari tas yang belum ada di katalog." data-i18n-attr="data-wa-message:cat.wa">
 
   <header class="header">
     <a class="header__logo" href="index.html" aria-label="Curated By Mami L — beranda" data-i18n-attr="aria-label:brand.homeAria">
       <img src="assets/logo.png" alt="Curated By Mami L">
     </a>
-    <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
-      <a href="index.html" data-i18n="nav.home">Beranda</a>
-      <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
-      <a href="catalog.html" aria-current="page" data-i18n="nav.catalog">Katalog</a>
-      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
-      <a href="about.html" data-i18n="nav.about">Tentang</a>
-    </nav>
+    <div class="header__end">
+      <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
+        <a href="index.html" data-i18n="nav.home">Beranda</a>
+        <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
+        <a href="catalog.html" aria-current="page" data-i18n="nav.catalog">Katalog</a>
+        <a href="best-sellers.html" data-i18n="nav.best">Paling Diminati</a>
+        <a href="about.html" data-i18n="nav.about">Tentang</a>
+      </nav>
 
-    <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
-      <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">ID</button>
-      <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+      <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
+        <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">Indonesia</button>
+        <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">English</button>
+      </div>
     </div>
   </header>
 
   <main>
     <section class="page-head">
       <h1 data-i18n="cat.h1">Katalog Kami</h1>
-      <p data-i18n="cat.lede">Semua yang ada di sini tersedia. Ketuk Pesan lewat WhatsApp dan pesannya sudah dituliskan untuk Anda.</p>
+      <p data-i18n="cat.lede">Semua yang ada di sini ready stock. Ketuk Pesan lewat WhatsApp dan pesannya sudah dituliskan untuk kamu.</p>
     </section>
 
     <section class="catalog">
@@ -252,10 +254,10 @@
                data-i18n-attr="placeholder:cat.search;aria-label:cat.search.aria">
         <div class="filters__cats js-cats" role="group" aria-label="Saring berdasarkan kategori" data-i18n-attr="aria-label:cat.filter.aria">
           <button class="filter-btn" type="button" data-cat="All" aria-pressed="true" data-i18n="cat.all">Semua</button>
-          <button class="filter-btn" type="button" data-cat="Totes" aria-pressed="false" data-i18n="cat.totes">Tote</button>
-          <button class="filter-btn" type="button" data-cat="Crossbody" aria-pressed="false" data-i18n="cat.crossbody">Selempang</button>
-          <button class="filter-btn" type="button" data-cat="Clutch" aria-pressed="false" data-i18n="cat.clutch">Clutch</button>
-          <button class="filter-btn" type="button" data-cat="Shoulder" aria-pressed="false" data-i18n="cat.shoulder">Bahu</button>
+          <button class="filter-btn" type="button" data-cat="Totes" aria-pressed="false" data-i18n="name.totes">Totes</button>
+          <button class="filter-btn" type="button" data-cat="Crossbody" aria-pressed="false" data-i18n="name.crossbody">Crossbody</button>
+          <button class="filter-btn" type="button" data-cat="Clutch" aria-pressed="false" data-i18n="name.clutch">Clutch</button>
+          <button class="filter-btn" type="button" data-cat="Shoulder" aria-pressed="false" data-i18n="name.shoulder">Shoulder</button>
         </div>
       </div>
 
@@ -300,7 +302,7 @@
             <div class="product__name">Elara Tote</div>
             <div class="product__price">Rp 2.850.000</div>
             <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Halo Curated By Mami L, saya ingin memesan Elara Tote (Rp 2.850.000). Apakah masih tersedia?"
+               data-wa-message="Halo Curated By Mami L, saya mau pesan Elara Tote (Rp 2.850.000). Masih tersedia?"
                data-i18n="product.order" data-i18n-attr="data-wa-message:product.wa"
                data-i18n-var-name="Elara Tote" data-i18n-var-price="Rp 2.850.000">Pesan lewat WhatsApp</a>
           </div>
@@ -316,7 +318,7 @@
             <div class="product__name">Mira Clutch</div>
             <div class="product__price">Rp 1.650.000</div>
             <a class="btn-solid product__order js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Halo Curated By Mami L, saya ingin memesan Mira Clutch (Rp 1.650.000). Apakah masih tersedia?"
+               data-wa-message="Halo Curated By Mami L, saya mau pesan Mira Clutch (Rp 1.650.000). Masih tersedia?"
                data-i18n="product.order" data-i18n-attr="data-wa-message:product.wa"
                data-i18n-var-name="Mira Clutch" data-i18n-var-price="Rp 1.650.000">Pesan lewat WhatsApp</a>
           </div>
@@ -324,19 +326,19 @@
 
       </div>
 
-      <p class="empty js-empty" role="status" hidden data-i18n="cat.empty">Tidak ada tas yang cocok dengan pencarian itu.</p>
+      <p class="empty js-empty" role="status" hidden data-i18n="cat.empty">Tidak ada tas yang cocok dengan pencarianmu.</p>
     </section>
   </main>
 
   <footer class="footer">
-    <h2 data-i18n="cat.footer.h2">Mencari sesuatu yang lain?</h2>
-    <p class="footer__lede" data-i18n="cat.footer.p">Beri tahu kami keinginan Anda dan kami carikan.</p>
+    <h2 data-i18n="cat.footer.h2">Cari sesuatu yang lain?</h2>
+    <p class="footer__lede" data-i18n="cat.footer.p">Ceritakan yang kamu cari, nanti kami carikan.</p>
     <a class="btn-gold js-wa" href="#" target="_blank" rel="noopener" data-i18n="cta.waChat">Chat di WhatsApp</a>
     <nav class="footer__nav" aria-label="Navigasi footer" data-i18n-attr="aria-label:nav.footer">
       <a href="index.html" data-i18n="nav.home">Beranda</a>
       <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
       <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
-      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Paling Diminati</a>
       <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
     <div class="footer__legal" data-i18n="footer.legal">© 2026 Curated By Mami L. Hak cipta dilindungi.</div>

@@ -1,13 +1,20 @@
 /* ============================================================
-   Curated By Mami L — language switch (Bahasa Indonesia / English)
+   Curated By Mami L — language switch (Indonesia / English)
 
    Indonesian is this shop's language: it is what is written in the
    HTML, what <html lang> says, and what a visitor gets on their
    first visit. This file holds the English translation of that copy
-   and swaps it in when the header's EN button is pressed. Writing
-   the default into the markup rather than into a dictionary is what
-   keeps the default path free of a flash of the wrong language and
-   correct with JS off.
+   and swaps it in when the header's English button is pressed.
+   Writing the default into the markup rather than into a dictionary
+   is what keeps the default path free of a flash of the wrong
+   language and correct with JS off — the product lists in
+   catalog.html and best-sellers.html are a real fallback for a
+   failed Firestore read, so they have to be readable either way.
+
+   Both languages live in one COPY object with identical keys, and
+   every user-visible string on the site renders through it: the
+   Indonesian in the markup is generated from COPY.id, never typed
+   twice by hand.
 
    Marking a node up for translation:
 
@@ -24,92 +31,85 @@
    Exposes window.CBML.t / .applyI18n / .setLanguage / .getLanguage,
    so nodes rendered later (catalog-live.js, best-sellers-live.js)
    are translated the same way. The choice is remembered in
-   localStorage under CBML_LANG_KEY.
+   localStorage under LANG_KEY.
+
+   Category and collection names (Totes, Crossbody, Clutches,
+   Shoulder), product names, prices and the brand name are the same
+   in both tables on purpose — they are not translated, but they
+   still render through COPY so no visible string is hardcoded.
    ============================================================ */
 
 (function () {
   var DEFAULT_LANG = "id";
   var LANGS = ["id", "en"];
-  var CBML_LANG_KEY = "cbml-lang";
+  var LANG_KEY = "mamil-lang";
 
-  var STRINGS = {
+  var COPY = {
     id: {
-      /* ---- Shared chrome ---- */
       "brand.homeAria": "Curated By Mami L — beranda",
       "nav.main": "Navigasi utama",
       "nav.footer": "Navigasi footer",
       "nav.home": "Beranda",
       "nav.collections": "Koleksi",
       "nav.catalog": "Katalog",
-      "nav.best": "Terlaris",
+      "nav.best": "Paling Diminati",
       "nav.about": "Tentang",
       "lang.aria": "Pilih bahasa",
       "chat.pill": "Chat dengan kami",
       "cta.waChat": "Chat di WhatsApp",
       "footer.legal": "© 2026 Curated By Mami L. Hak cipta dilindungi.",
       "footer.waUs": "Hubungi kami di WhatsApp",
-
-      /* ---- How to Order (Beranda + Tentang) ---- */
+      "name.totes": "Totes",
+      "name.crossbody": "Crossbody",
+      "name.clutches": "Clutches",
+      "name.clutch": "Clutch",
+      "name.shoulder": "Shoulder",
+      "slot.totes": "Foto koleksi Totes",
+      "slot.crossbody": "Foto koleksi Crossbody",
+      "slot.clutches": "Foto koleksi Clutches",
       "how.title": "Cara Memesan",
-      "how.1.step": "Jelajahi katalog",
-      "how.1.body": "Saring berdasarkan gaya atau cari dari namanya. Semua yang tampil tersedia.",
-      "how.2.step": "Ketuk untuk memesan",
-      "how.2.body": "WhatsApp terbuka dengan nama tas dan harganya sudah dituliskan untuk Anda.",
-      "how.3.step": "Kami simpan untuk Anda",
+      "how.1.step": "Lihat-lihat katalog",
+      "how.1.body": "Saring sesuai gaya atau cari namanya. Semua yang tampil ready stock.",
+      "how.2.step": "Ketuk untuk pesan",
+      "how.2.body": "WhatsApp langsung terbuka dengan nama tas dan harganya sudah tertulis untuk kamu.",
+      "how.3.step": "Kami simpankan untuk kamu",
       "how.3.body": "Konfirmasi pembayaran dan pengiriman lewat chat. Setiap tas kami tahan 24 jam.",
-
-      /* ---- Beranda ---- */
-      "home.pageTitle": "Curated By Mami L — Keanggunan Abadi, Dikurasi untuk Anda",
-      "home.h1": "Keanggunan Abadi, Dikurasi untuk Anda",
-      "home.lede": "Setiap tas di katalog kami tersedia dan siap dikirim. Pilih milik Anda, lalu chat kami di WhatsApp untuk memesannya.",
+      "home.pageTitle": "Curated By Mami L — Keanggunan yang Tak Pernah Usang",
+      "home.h1": "Keanggunan yang Tak Pernah Usang",
+      "home.lede": "Semua tas di katalog kami ready stock dan siap dikirim. Pilih yang kamu suka, lalu chat kami di WhatsApp untuk memesannya.",
       "home.cta": "Lihat Koleksi",
-      "home.styles": "Belanja per Gaya",
-      "home.wa": "Halo Curated By Mami L, saya ingin bertanya tentang tas di katalog Anda.",
+      "home.styles": "Pilih Sesuai Gaya",
+      "home.wa": "Halo Curated By Mami L, saya mau tanya soal tas di katalog.",
       "footer.loop.h2": "Tetap Terhubung",
-      "footer.loop.p": "Jadilah yang pertama tahu tentang koleksi baru dan penawaran eksklusif.",
-      "form.email": "Alamat email Anda",
+      "footer.loop.p": "Jadi yang pertama tahu soal koleksi baru dan penawaran spesial.",
+      "form.email": "Alamat email kamu",
       "form.subscribe": "Berlangganan",
-
-      /* ---- Kategori ---- */
-      "cat.totes": "Tote",
-      "cat.crossbody": "Selempang",
-      "cat.clutch": "Clutch",
-      "cat.shoulder": "Bahu",
-      "slot.totes": "Foto koleksi Tote",
-      "slot.crossbody": "Foto koleksi Selempang",
-      "slot.clutch": "Foto koleksi Clutch",
-
-      /* ---- Koleksi ---- */
       "coll.pageTitle": "Koleksi Pilihan — Curated By Mami L",
       "coll.h1": "Koleksi Pilihan",
-      "coll.lede": "Tiga cara membawa hari Anda. Pilih siluetnya, lalu jelajahi semua yang tersedia dalam gaya itu.",
-      "coll.totes.p": "Lapang, terstruktur, dibuat untuk hari yang panjang.",
-      "coll.crossbody.p": "Bebas genggam, jatuh lembut, mudah dipadupadankan.",
-      "coll.clutch.p": "Pilihan untuk malam hari, mungil dan penuh pertimbangan.",
-      "coll.totes.cta": "Lihat Tote",
-      "coll.crossbody.cta": "Lihat Selempang",
-      "coll.clutch.cta": "Lihat Clutch",
-      "coll.wa": "Halo Curated By Mami L, saya ingin dibantu memilih tas dari koleksi Anda.",
-      "coll.footer.h2": "Belum yakin yang mana?",
-      "coll.footer.p": "Kirim pesan dan kami bantu memilihkan.",
-
-      /* ---- Katalog ---- */
+      "coll.lede": "Tiga cara membawa harimu. Pilih siluetnya, lalu lihat semua yang tersedia dalam gaya itu.",
+      "coll.totes.p": "Luas, rapi bentuknya, siap menemani hari panjangmu.",
+      "coll.crossbody.p": "Tangan bebas, jatuhnya lembut, gampang dipadupadankan.",
+      "coll.clutches.p": "Buat malam hari, mungil tapi penuh pertimbangan.",
+      "coll.totes.cta": "Lihat Totes",
+      "coll.crossbody.cta": "Lihat Crossbody",
+      "coll.clutches.cta": "Lihat Clutches",
+      "coll.wa": "Halo Curated By Mami L, saya mau dibantu pilih tas dari koleksi.",
+      "coll.footer.h2": "Masih bingung pilih yang mana?",
+      "coll.footer.p": "Kirim pesan, kami bantu pilihkan.",
       "cat.pageTitle": "Katalog Kami — Curated By Mami L",
       "cat.h1": "Katalog Kami",
-      "cat.lede": "Semua yang ada di sini tersedia. Ketuk Pesan lewat WhatsApp dan pesannya sudah dituliskan untuk Anda.",
+      "cat.lede": "Semua yang ada di sini ready stock. Ketuk Pesan lewat WhatsApp dan pesannya sudah dituliskan untuk kamu.",
       "cat.search": "Cari tas...",
       "cat.search.aria": "Cari tas berdasarkan nama",
       "cat.filter.aria": "Saring berdasarkan kategori",
       "cat.all": "Semua",
-      "cat.empty": "Tidak ada tas yang cocok dengan pencarian itu.",
-      "cat.wa": "Halo Curated By Mami L, saya mencari tas yang belum ada di katalog.",
-      "cat.footer.h2": "Mencari sesuatu yang lain?",
-      "cat.footer.p": "Beri tahu kami keinginan Anda dan kami carikan.",
-
-      /* ---- Kartu produk (markup dan Firestore) ---- */
+      "cat.empty": "Tidak ada tas yang cocok dengan pencarianmu.",
+      "cat.wa": "Halo Curated By Mami L, saya lagi cari tas yang belum ada di katalog.",
+      "cat.footer.h2": "Cari sesuatu yang lain?",
+      "cat.footer.p": "Ceritakan yang kamu cari, nanti kami carikan.",
       "product.order": "Pesan lewat WhatsApp",
       "product.save": "Simpan {name}",
-      "product.wa": "Halo Curated By Mami L, saya ingin memesan {name} ({price}). Apakah masih tersedia?",
+      "product.wa": "Halo Curated By Mami L, saya mau pesan {name} ({price}). Masih tersedia?",
       "gallery.group": "Foto {name}",
       "gallery.prev": "Foto sebelumnya dari {name}",
       "gallery.next": "Foto berikutnya dari {name}",
@@ -117,28 +117,23 @@
       "gallery.alt": "{name} — foto {n} dari {m}",
       "slot.elara.side": "Elara Tote — samping",
       "slot.elara.inside": "Elara Tote — bagian dalam",
-
-      /* ---- Terlaris ---- */
-      "best.pageTitle": "Terlaris — Curated By Mami L",
-      "best.h1": "Terlaris",
-      "best.lede": "Produk yang selalu dicari pelanggan kami. Distok ulang dalam jumlah terbatas.",
-      "best.wa": "Halo Curated By Mami L, saya ingin bertanya tentang produk terlaris Anda.",
+      "best.pageTitle": "Paling Diminati — Curated By Mami L",
+      "best.h1": "Paling Diminati",
+      "best.lede": "Yang paling sering dicari dan dipesan ulang pelanggan kami. Distok ulang dalam jumlah terbatas.",
+      "best.wa": "Halo Curated By Mami L, saya mau tanya soal tas yang paling diminati.",
       "best.footer.h2": "Lihat katalog lengkap",
-      "best.footer.p": "Semua yang kami miliki saat ini.",
-      "best.footer.cta": "Jelajahi Katalog",
-
-      /* ---- Tentang ---- */
+      "best.footer.p": "Semua yang kami punya saat ini.",
+      "best.footer.cta": "Lihat Katalog",
       "about.pageTitle": "Kisah Kami — Curated By Mami L",
       "about.h1": "Kisah Kami",
       "about.slot": "Foto atelier / bengkel kerja",
-      "about.body": "Curated By Mami L lahir dari kecintaan pada aksesori yang tak lekang waktu. Setiap produk dalam koleksi kami dipilih langsung karena kualitas pengerjaan, desain yang elegan, dan keserbagunaannya. Kami percaya tas yang tepat bukan sekadar melengkapi penampilan — ia menceritakan kisah Anda. Dari bengkel para perajin hingga lemari Anda, kami menghadirkan kemewahan yang bertahan lama.",
-      "about.wa": "Halo Curated By Mami L, saya ingin tahu lebih banyak tentang tas Anda.",
+      "about.body": "Curated By Mami L lahir dari kecintaan pada aksesori yang tak lekang waktu. Setiap produk dalam koleksi kami kami pilih sendiri karena kualitas jahitannya, desainnya yang elegan, dan gampang dipakai ke mana saja. Kami percaya tas yang tepat bukan cuma melengkapi penampilan — ia menceritakan kisahmu. Dari bengkel para perajin sampai ke lemari kamu, kami menghadirkan kemewahan yang awet.",
+      "about.wa": "Halo Curated By Mami L, saya mau tahu lebih banyak soal tas kalian.",
       "about.footer.h2": "Sapa kami",
       "about.footer.p": "Kami membalas setiap pesan, biasanya dalam satu jam."
     },
 
     en: {
-      /* ---- Shared chrome ---- */
       "brand.homeAria": "Curated By Mami L — home",
       "nav.main": "Main",
       "nav.footer": "Footer",
@@ -152,8 +147,14 @@
       "cta.waChat": "Chat on WhatsApp",
       "footer.legal": "© 2026 Curated By Mami L. All rights reserved.",
       "footer.waUs": "WhatsApp us",
-
-      /* ---- How to Order (Home + About) ---- */
+      "name.totes": "Totes",
+      "name.crossbody": "Crossbody",
+      "name.clutches": "Clutches",
+      "name.clutch": "Clutch",
+      "name.shoulder": "Shoulder",
+      "slot.totes": "Totes collection photo",
+      "slot.crossbody": "Crossbody collection photo",
+      "slot.clutches": "Clutches collection photo",
       "how.title": "How to Order",
       "how.1.step": "Browse the catalog",
       "how.1.body": "Filter by style or search by name. Everything shown is in stock.",
@@ -161,8 +162,6 @@
       "how.2.body": "WhatsApp opens with the bag and price already written for you.",
       "how.3.step": "We hold it for you",
       "how.3.body": "Confirm payment and delivery in the chat. Each bag is reserved 24 hours.",
-
-      /* ---- Home ---- */
       "home.pageTitle": "Curated By Mami L — Timeless Elegance, Curated for You",
       "home.h1": "Timeless Elegance, Curated for You",
       "home.lede": "Every bag in our catalog is in stock and ready to ship. Choose yours, then chat with us on WhatsApp to reserve it.",
@@ -173,31 +172,18 @@
       "footer.loop.p": "Be the first to know about new arrivals and exclusive offers.",
       "form.email": "Your email address",
       "form.subscribe": "Subscribe",
-
-      /* ---- Categories ---- */
-      "cat.totes": "Totes",
-      "cat.crossbody": "Crossbody",
-      "cat.clutch": "Clutch",
-      "cat.shoulder": "Shoulder",
-      "slot.totes": "Totes collection photo",
-      "slot.crossbody": "Crossbody collection photo",
-      "slot.clutch": "Clutches collection photo",
-
-      /* ---- Collections ---- */
       "coll.pageTitle": "Featured Collections — Curated By Mami L",
       "coll.h1": "Featured Collections",
       "coll.lede": "Three ways to carry the day. Pick a silhouette, then browse everything available in that style.",
       "coll.totes.p": "Roomy, structured, built for long days.",
       "coll.crossbody.p": "Hands free, softly worn, easy to dress up.",
-      "coll.clutch.p": "Evening pieces, small and deliberate.",
+      "coll.clutches.p": "Evening pieces, small and deliberate.",
       "coll.totes.cta": "View Totes",
       "coll.crossbody.cta": "View Crossbody",
-      "coll.clutch.cta": "View Clutches",
+      "coll.clutches.cta": "View Clutches",
       "coll.wa": "Hello Curated By Mami L, I'd like help choosing a bag from your collections.",
       "coll.footer.h2": "Not sure which suits you?",
       "coll.footer.p": "Message us and we'll help you choose.",
-
-      /* ---- Catalog ---- */
       "cat.pageTitle": "Our Catalog — Curated By Mami L",
       "cat.h1": "Our Catalog",
       "cat.lede": "Everything here is in stock. Tap Order on WhatsApp and the message is written for you.",
@@ -209,8 +195,6 @@
       "cat.wa": "Hello Curated By Mami L, I'm looking for a bag that isn't in the catalog.",
       "cat.footer.h2": "Looking for something else?",
       "cat.footer.p": "Tell us what you have in mind and we'll source it.",
-
-      /* ---- Product cards (markup and Firestore) ---- */
       "product.order": "Order on WhatsApp",
       "product.save": "Save {name}",
       "product.wa": "Hello Curated By Mami L, I'd like to order the {name} ({price}). Is it still available?",
@@ -221,8 +205,6 @@
       "gallery.alt": "{name} — photo {n} of {m}",
       "slot.elara.side": "Elara Tote — side",
       "slot.elara.inside": "Elara Tote — inside",
-
-      /* ---- Best Sellers ---- */
       "best.pageTitle": "Best Sellers — Curated By Mami L",
       "best.h1": "Best Sellers",
       "best.lede": "The pieces our customers come back for. Restocked in small runs.",
@@ -230,8 +212,6 @@
       "best.footer.h2": "See the full catalog",
       "best.footer.p": "Every piece we have in stock right now.",
       "best.footer.cta": "Browse Catalog",
-
-      /* ---- About ---- */
       "about.pageTitle": "Our Story — Curated By Mami L",
       "about.h1": "Our Story",
       "about.slot": "Atelier / workshop photo",
@@ -242,11 +222,24 @@
     }
   };
 
+  /* Both tables must carry the same keys, or a switch would blank a string on
+     one side only. Checked on localhost rather than in a test run, since this
+     repo has no test tooling and the failure is otherwise silent. */
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    LANGS.forEach(function (a) {
+      LANGS.forEach(function (b) {
+        Object.keys(COPY[a]).forEach(function (key) {
+          if (!(key in COPY[b])) console.error("i18n: key " + key + " missing from COPY." + b);
+        });
+      });
+    });
+  }
+
   var current = DEFAULT_LANG;
 
   function stored() {
     try {
-      var saved = window.localStorage.getItem(CBML_LANG_KEY);
+      var saved = window.localStorage.getItem(LANG_KEY);
       return LANGS.indexOf(saved) !== -1 ? saved : "";
     } catch (err) {
       // Private browsing can throw on access alone; the default is fine.
@@ -256,7 +249,7 @@
 
   function remember(lang) {
     try {
-      window.localStorage.setItem(CBML_LANG_KEY, lang);
+      window.localStorage.setItem(LANG_KEY, lang);
     } catch (err) {
       /* not being able to remember the choice is not worth an error */
     }
@@ -279,7 +272,7 @@
   /* Unknown keys return the key itself rather than "" — a visible key is a
      bug report; a blank label is a mystery. */
   function t(key, vars, lang) {
-    var table = STRINGS[lang || current] || STRINGS[DEFAULT_LANG];
+    var table = COPY[lang || current] || COPY[DEFAULT_LANG];
     var text = table[key];
     if (text === undefined) return key;
     if (!vars) return text;
@@ -319,6 +312,8 @@
     scope.querySelectorAll("[data-i18n], [data-i18n-attr]").forEach(translate);
   }
 
+  /* Text is replaced in place: no reload, no navigation, and nothing here
+     touches layout or the galleries' active slide. */
   function setLanguage(lang, options) {
     if (LANGS.indexOf(lang) === -1) return false;
 
@@ -346,6 +341,8 @@
   };
 
   document.querySelectorAll(".js-lang").forEach(function (group) {
+    /* Click covers the keyboard too: a <button> fires click on Enter and
+       Space, so the pill is operable without a keydown handler. */
     group.addEventListener("click", function (e) {
       var btn = e.target.closest("[data-lang]");
       if (btn) setLanguage(btn.dataset.lang);

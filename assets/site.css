@@ -82,34 +82,43 @@ img { max-width: 100%; }
 
 /* ---- Language switch ----
    Header chrome, so it lives here rather than in a page's own <style>.
-   Two states rather than one flip-flop button, so the language you are
-   already reading is visible instead of having to be inferred. Borrows
-   the catalog filter pills' aria-pressed idiom. */
-.lang {
+   Both languages are always visible and spelled out — a flag stands for a
+   country, not a language, and "ID"/"EN" assumes the visitor already knows
+   the code for the language they are looking for.
+
+   .header__end puts the nav and the switch on one row at the nav's own
+   34px rhythm, so the control sits in the same spot on every page. */
+.header__end {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 34px;
+}
+.lang {
+  display: inline-flex;
   padding: 3px;
-  border: 1px solid var(--border-soft);
   border-radius: 999px;
-  background: var(--cream);
+  background: var(--sand);
+  border: 1px solid var(--line);
 }
 .lang__btn {
-  padding: 5px 12px;
+  padding: 7px 16px;
   border: none;
   border-radius: 999px;
-  background: none;
-  color: var(--taupe);
+  background: transparent;
+  color: var(--stone);
   font-family: var(--sans);
-  font-size: 11.5px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: background 160ms ease, color 160ms ease;
+  /* white-space so the longer Indonesian label can never wrap the pill */
+  white-space: nowrap;
+  transition: all 0.2s ease;
 }
-.lang__btn:hover { color: var(--espresso); }
 .lang__btn[aria-pressed="true"] {
-  background: var(--gold);
+  background: var(--espresso);
   color: var(--cream);
+  font-weight: 500;
 }
 
 /* ---- Shared type ---- */
@@ -359,7 +368,7 @@ img { max-width: 100%; }
   /* the wrapped 5-item nav makes a sticky header eat too much of a phone screen */
   .header { position: static; flex-direction: column; gap: 14px; padding: 14px 20px; }
   .nav { gap: 22px; flex-wrap: wrap; justify-content: center; font-size: 11.5px; }
-  .lang__btn { padding: 5px 10px; font-size: 11px; }
+  .header__end { flex-direction: column; gap: 14px; }
   .page-head { padding: 52px 20px 40px; }
   .page-head h1 { font-size: 32px; }
   .how { padding: 52px 20px; }

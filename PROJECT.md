@@ -57,7 +57,7 @@ when testing Firebase** — Analytics needs a real http(s) origin and is skipped
 ├── assets/
 │   ├── site.css          shared chrome + design tokens
 │   ├── site.js           builds every wa.me link
-│   ├── i18n.js           Indonesian/English switch + the English strings
+│   ├── i18n.js           the COPY tables + the Indonesia/English switch
 │   ├── catalog.js        catalog search / filter / save hearts
 │   ├── catalog-live.js   reads products from the shared Firestore
 │   ├── firebase.js       Firebase app init
@@ -183,14 +183,26 @@ Six files, no dependencies, no bundler.
 
 The shop's language is **Indonesian**, and that is a decision about the markup,
 not just a default: the visible copy in all five `.html` files is Indonesian,
-`<html lang="id">` says so, and `assets/i18n.js` holds the *English*
-translation of it. Nothing has to run for a first-time visitor to get
-Indonesian — no flash of the wrong language, and the no-JS fallback lists are
-in the right language too.
+`<html lang="id">` says so, and switching is what costs work. Nothing has to run
+for a first-time visitor to get Indonesian — no flash of the wrong language, and
+the no-JS fallback product lists are in the right language too.
 
-The header carries an `ID` / `EN` pair (`.lang.js-lang`, styled in `site.css`
-since it is shared chrome) using the same `aria-pressed` idiom as the catalog
-filter pills. The choice is remembered in `localStorage` under `cbml-lang`;
+Both languages live in **one `COPY` object with identical keys**, and every
+user-visible string on the site renders through it. The Indonesian in the markup
+is generated from `COPY.id` rather than typed twice (see below), so the two
+cannot drift by hand.
+
+The header carries an `Indonesia` / `English` pill — full words, never flags and
+never `ID`/`EN`: a flag stands for a country rather than a language, and a
+two-letter code assumes the visitor already knows the code for the language they
+are looking for. It is styled in `site.css` (shared chrome) using the same
+`aria-pressed` idiom as the catalog filter pills, and sits inside
+`.header__end`, which puts it on one flex row with the nav at the nav's own 34px
+rhythm so it never moves between pages. Both buttons are real `<button>`s inside
+a `role="group"`, so Tab reaches them and Enter/Space operates them with no
+keydown handler of our own.
+
+The choice is remembered in `localStorage` under `mamil-lang`;
 `navigator.language` is deliberately **not** consulted, so entering the site is
 Indonesian unless the visitor has chosen otherwise on this browser.
 
@@ -209,15 +221,25 @@ attribute when it builds the `wa.me` hrefs, `applyI18n()` must always run
 order; `i18n.js` is also loaded before `site.js` in every page's script block
 for the same reason.
 
+Switching replaces text in place — no reload, no navigation — and touches
+nothing else, so a gallery keeps its active slide and the catalog keeps its
+filter across a switch.
+
 Exposed as `window.CBML.t / .applyI18n / .setLanguage / .getLanguage`, so cards
 rendered from Firestore are stamped with keys and re-fill on a switch without
 being re-rendered.
 
-Adding a string: add the key to **both** the `id` and `en` tables in
-`i18n.js`, and make the `id` value byte-identical to what is written in the
-HTML — otherwise switching to English and back would silently reword the page.
-An unknown key renders as the key itself, which is meant to be noticed.
+**Not translated, on purpose:** category and collection names (Totes,
+Crossbody, Clutches, Shoulder), product names, the brand name, and prices
+(rupiah in both languages). They still carry keys and sit in both tables, so
+that no visible string is hardcoded in the markup — the two tables just hold
+the same value. Indonesian copy addresses the visitor as `kamu`.
 
+**Adding or editing a string.** The Indonesian in the markup must stay
+byte-identical to `COPY.id`. Edit `i18n.js`, then make the same edit in the HTML
+— or regenerate the markup from the table, which is how the current copy was
+produced. `i18n.js` logs an error on localhost for any key present in one table
+and missing from the other; the markup/table match has no such guard.
 
 ### `assets/site.js` — WhatsApp links
 
@@ -572,15 +594,20 @@ Not in the source designs, added on top:
    at the top of that file).
 7. **No App Check.** Rules are in place (§7) but App Check is not configured.
 8. **Two copies of the Indonesian copy.** Every string exists once in the HTML
-   and once in `i18n.js`'s `id` table, and nothing checks that they still match.
+   and once in `COPY.id`, and nothing checks *at runtime* that they still match.
    They are identical today; editing the page copy without editing the table
-   means a visitor who switches to English and back gets the old wording.
+   means a visitor who switches to English and back gets the old wording. Key
+   parity between the two tables *is* checked, but only on localhost.
 9. **The English picker gets a flash of Indonesian.** A returning visitor who
    chose `EN` sees the Indonesian markup for the instant before `i18n.js` runs.
    Accepted deliberately: hiding the page until the switch had run would cost
    every default-language visitor a blank frame to spare the minority.
 10. **`WHATSAPP_FALLBACK_MESSAGE` in `site.js` is English-only.** It is reached
    only if a page omits `data-wa-message`, which none do.
+11. **The desktop header has ~39px of slack.** At 901px — the narrowest width
+   before the mobile breakpoint — the logo, nav and language pill fit with
+   about 39px to spare. `.nav` does not wrap above 900px, so a nav label
+   longer than "Paling Diminati" would overflow rather than reflow.
 
 ### Cosmetic, noted but not changed
 
