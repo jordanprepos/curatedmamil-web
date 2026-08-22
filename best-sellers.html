@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-i18n="best.pageTitle">Terlaris — Curated By Mami L</title>
-<meta name="description" content="Produk yang selalu dicari pelanggan kami. Distok ulang dalam jumlah terbatas." data-i18n-attr="content:best.lede">
+<title data-i18n="best.pageTitle">Paling Diminati — Curated By Mami L</title>
+<meta name="description" content="Yang paling sering dicari dan dipesan ulang pelanggan kami. Distok ulang dalam jumlah terbatas." data-i18n-attr="content:best.lede">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -57,30 +57,32 @@
   }
 </style>
 </head>
-<body data-wa-message="Halo Curated By Mami L, saya ingin bertanya tentang produk terlaris Anda." data-i18n-attr="data-wa-message:best.wa">
+<body data-wa-message="Halo Curated By Mami L, saya mau tanya soal tas yang paling diminati." data-i18n-attr="data-wa-message:best.wa">
 
   <header class="header">
     <a class="header__logo" href="index.html" aria-label="Curated By Mami L — beranda" data-i18n-attr="aria-label:brand.homeAria">
       <img src="assets/logo.png" alt="Curated By Mami L">
     </a>
-    <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
-      <a href="index.html" data-i18n="nav.home">Beranda</a>
-      <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
-      <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
-      <a href="best-sellers.html" aria-current="page" data-i18n="nav.best">Terlaris</a>
-      <a href="about.html" data-i18n="nav.about">Tentang</a>
-    </nav>
+    <div class="header__end">
+      <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
+        <a href="index.html" data-i18n="nav.home">Beranda</a>
+        <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
+        <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
+        <a href="best-sellers.html" aria-current="page" data-i18n="nav.best">Paling Diminati</a>
+        <a href="about.html" data-i18n="nav.about">Tentang</a>
+      </nav>
 
-    <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
-      <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">ID</button>
-      <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+      <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
+        <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">Indonesia</button>
+        <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">English</button>
+      </div>
     </div>
   </header>
 
   <main>
     <section class="page-head">
-      <h1 data-i18n="best.h1">Terlaris</h1>
-      <p data-i18n="best.lede">Produk yang selalu dicari pelanggan kami. Distok ulang dalam jumlah terbatas.</p>
+      <h1 data-i18n="best.h1">Paling Diminati</h1>
+      <p data-i18n="best.lede">Yang paling sering dicari dan dipesan ulang pelanggan kami. Distok ulang dalam jumlah terbatas.</p>
     </section>
 
     <section class="best">
@@ -99,7 +101,7 @@
             <div class="best-card__name">Elara Tote</div>
             <div class="best-card__price">Rp 2.850.000</div>
             <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Halo Curated By Mami L, saya ingin memesan Elara Tote (Rp 2.850.000). Apakah masih tersedia?"
+               data-wa-message="Halo Curated By Mami L, saya mau pesan Elara Tote (Rp 2.850.000). Masih tersedia?"
                data-i18n="product.order" data-i18n-attr="data-wa-message:product.wa"
                data-i18n-var-name="Elara Tote" data-i18n-var-price="Rp 2.850.000">Pesan lewat WhatsApp</a>
           </div>
@@ -111,7 +113,7 @@
             <div class="best-card__name">Mira Clutch</div>
             <div class="best-card__price">Rp 1.650.000</div>
             <a class="btn-solid js-wa" href="#" target="_blank" rel="noopener"
-               data-wa-message="Halo Curated By Mami L, saya ingin memesan Mira Clutch (Rp 1.650.000). Apakah masih tersedia?"
+               data-wa-message="Halo Curated By Mami L, saya mau pesan Mira Clutch (Rp 1.650.000). Masih tersedia?"
                data-i18n="product.order" data-i18n-attr="data-wa-message:product.wa"
                data-i18n-var-name="Mira Clutch" data-i18n-var-price="Rp 1.650.000">Pesan lewat WhatsApp</a>
           </div>
@@ -123,13 +125,13 @@
 
   <footer class="footer">
     <h2 data-i18n="best.footer.h2">Lihat katalog lengkap</h2>
-    <p class="footer__lede" data-i18n="best.footer.p">Semua yang kami miliki saat ini.</p>
-    <a class="btn-gold" href="catalog.html" data-i18n="best.footer.cta">Jelajahi Katalog</a>
+    <p class="footer__lede" data-i18n="best.footer.p">Semua yang kami punya saat ini.</p>
+    <a class="btn-gold" href="catalog.html" data-i18n="best.footer.cta">Lihat Katalog</a>
     <nav class="footer__nav" aria-label="Navigasi footer" data-i18n-attr="aria-label:nav.footer">
       <a href="index.html" data-i18n="nav.home">Beranda</a>
       <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
       <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
-      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Paling Diminati</a>
       <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
     <div class="footer__legal" data-i18n="footer.legal">© 2026 Curated By Mami L. Hak cipta dilindungi.</div>

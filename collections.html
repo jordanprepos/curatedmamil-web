@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title data-i18n="coll.pageTitle">Koleksi Pilihan — Curated By Mami L</title>
-<meta name="description" content="Tiga cara membawa hari Anda. Pilih siluetnya, lalu jelajahi semua yang tersedia dalam gaya itu." data-i18n-attr="content:coll.lede">
+<meta name="description" content="Tiga cara membawa harimu. Pilih siluetnya, lalu lihat semua yang tersedia dalam gaya itu." data-i18n-attr="content:coll.lede">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -50,58 +50,60 @@
   }
 </style>
 </head>
-<body data-wa-message="Halo Curated By Mami L, saya ingin dibantu memilih tas dari koleksi Anda." data-i18n-attr="data-wa-message:coll.wa">
+<body data-wa-message="Halo Curated By Mami L, saya mau dibantu pilih tas dari koleksi." data-i18n-attr="data-wa-message:coll.wa">
 
   <header class="header">
     <a class="header__logo" href="index.html" aria-label="Curated By Mami L — beranda" data-i18n-attr="aria-label:brand.homeAria">
       <img src="assets/logo.png" alt="Curated By Mami L">
     </a>
-    <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
-      <a href="index.html" data-i18n="nav.home">Beranda</a>
-      <a href="collections.html" aria-current="page" data-i18n="nav.collections">Koleksi</a>
-      <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
-      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
-      <a href="about.html" data-i18n="nav.about">Tentang</a>
-    </nav>
+    <div class="header__end">
+      <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
+        <a href="index.html" data-i18n="nav.home">Beranda</a>
+        <a href="collections.html" aria-current="page" data-i18n="nav.collections">Koleksi</a>
+        <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
+        <a href="best-sellers.html" data-i18n="nav.best">Paling Diminati</a>
+        <a href="about.html" data-i18n="nav.about">Tentang</a>
+      </nav>
 
-    <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
-      <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">ID</button>
-      <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+      <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
+        <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">Indonesia</button>
+        <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">English</button>
+      </div>
     </div>
   </header>
 
   <main>
     <section class="page-head">
       <h1 data-i18n="coll.h1">Koleksi Pilihan</h1>
-      <p data-i18n="coll.lede">Tiga cara membawa hari Anda. Pilih siluetnya, lalu jelajahi semua yang tersedia dalam gaya itu.</p>
+      <p data-i18n="coll.lede">Tiga cara membawa harimu. Pilih siluetnya, lalu lihat semua yang tersedia dalam gaya itu.</p>
     </section>
 
     <section class="collections">
       <div class="collections__grid">
         <article class="collection-card">
-          <div class="image-slot" data-i18n="slot.totes">Foto koleksi Tote</div>
+          <div class="image-slot" data-i18n="slot.totes">Foto koleksi Totes</div>
           <div class="collection-card__body">
-            <div class="collection-card__title" data-i18n="cat.totes">Tote</div>
-            <p data-i18n="coll.totes.p">Lapang, terstruktur, dibuat untuk hari yang panjang.</p>
-            <a class="btn-outline" href="catalog.html" data-i18n="coll.totes.cta">Lihat Tote</a>
+            <div class="collection-card__title" data-i18n="name.totes">Totes</div>
+            <p data-i18n="coll.totes.p">Luas, rapi bentuknya, siap menemani hari panjangmu.</p>
+            <a class="btn-outline" href="catalog.html" data-i18n="coll.totes.cta">Lihat Totes</a>
           </div>
         </article>
 
         <article class="collection-card">
-          <div class="image-slot" data-i18n="slot.crossbody">Foto koleksi Selempang</div>
+          <div class="image-slot" data-i18n="slot.crossbody">Foto koleksi Crossbody</div>
           <div class="collection-card__body">
-            <div class="collection-card__title" data-i18n="cat.crossbody">Selempang</div>
-            <p data-i18n="coll.crossbody.p">Bebas genggam, jatuh lembut, mudah dipadupadankan.</p>
-            <a class="btn-outline" href="catalog.html" data-i18n="coll.crossbody.cta">Lihat Selempang</a>
+            <div class="collection-card__title" data-i18n="name.crossbody">Crossbody</div>
+            <p data-i18n="coll.crossbody.p">Tangan bebas, jatuhnya lembut, gampang dipadupadankan.</p>
+            <a class="btn-outline" href="catalog.html" data-i18n="coll.crossbody.cta">Lihat Crossbody</a>
           </div>
         </article>
 
         <article class="collection-card">
-          <div class="image-slot" data-i18n="slot.clutch">Foto koleksi Clutch</div>
+          <div class="image-slot" data-i18n="slot.clutches">Foto koleksi Clutches</div>
           <div class="collection-card__body">
-            <div class="collection-card__title" data-i18n="cat.clutch">Clutch</div>
-            <p data-i18n="coll.clutch.p">Pilihan untuk malam hari, mungil dan penuh pertimbangan.</p>
-            <a class="btn-outline" href="catalog.html" data-i18n="coll.clutch.cta">Lihat Clutch</a>
+            <div class="collection-card__title" data-i18n="name.clutches">Clutches</div>
+            <p data-i18n="coll.clutches.p">Buat malam hari, mungil tapi penuh pertimbangan.</p>
+            <a class="btn-outline" href="catalog.html" data-i18n="coll.clutches.cta">Lihat Clutches</a>
           </div>
         </article>
       </div>
@@ -109,14 +111,14 @@
   </main>
 
   <footer class="footer">
-    <h2 data-i18n="coll.footer.h2">Belum yakin yang mana?</h2>
-    <p class="footer__lede" data-i18n="coll.footer.p">Kirim pesan dan kami bantu memilihkan.</p>
+    <h2 data-i18n="coll.footer.h2">Masih bingung pilih yang mana?</h2>
+    <p class="footer__lede" data-i18n="coll.footer.p">Kirim pesan, kami bantu pilihkan.</p>
     <a class="btn-gold js-wa" href="#" target="_blank" rel="noopener" data-i18n="cta.waChat">Chat di WhatsApp</a>
     <nav class="footer__nav" aria-label="Navigasi footer" data-i18n-attr="aria-label:nav.footer">
       <a href="index.html" data-i18n="nav.home">Beranda</a>
       <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
       <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
-      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Paling Diminati</a>
       <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
     <div class="footer__legal" data-i18n="footer.legal">© 2026 Curated By Mami L. Hak cipta dilindungi.</div>

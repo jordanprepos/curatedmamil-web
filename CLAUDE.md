@@ -55,19 +55,29 @@ a `prefers-reduced-motion` guard were added on top of the source designs, which
 were fixed-desktop.
 
 **`assets/i18n.js`** (every page, loaded **before** `site.js`): the header's
-`ID` / `EN` switch. Indonesian lives in the markup and English lives in this
-file's dictionary — that way the default costs no work, has no flash of the
-wrong language, and is what a no-JS visitor sees. First visit is always
-Indonesian: `navigator.language` is deliberately ignored and only an explicit
-choice, remembered in `localStorage` under `cbml-lang`, overrides it.
+`Indonesia` / `English` switch. Both languages live in one `COPY` object with
+identical keys, and every user-visible string renders through it — but the
+Indonesian side is also written into the markup, so the default costs no work,
+has no flash of the wrong language, and is what a no-JS visitor sees. First
+visit is always Indonesian: `navigator.language` is deliberately ignored and
+only an explicit choice, remembered in `localStorage` under `mamil-lang`,
+overrides it.
 
 Nodes are marked with `data-i18n="key"` (text), `data-i18n-attr="attr:key;…"`
 (attributes) and `data-i18n-var-name="…"` (fills `{name}`). Attributes include
 `data-wa-message`, which is how the prefilled WhatsApp text follows the
 language — and why `applyI18n()` must always run **before** `wireWaLinks()`.
-Exposes `window.CBML.t / .applyI18n / .setLanguage / .getLanguage`. When adding
-a string, add it to both the `id` and `en` tables and keep the `id` value
-identical to the HTML, or switching to English and back reworks the page.
+Exposes `window.CBML.t / .applyI18n / .setLanguage / .getLanguage`.
+
+Category and collection names (Totes, Crossbody, Clutches, Shoulder), product
+names and prices are **not translated** — they are identical in both tables so
+that no visible string is hardcoded, not because they need translating. The
+Indonesian copy addresses the visitor as `kamu`.
+
+The Indonesian in the markup must stay byte-identical to `COPY.id`, or
+switching to English and back silently rewords the page. On localhost the file
+logs an error for any key missing from either table; the markup/table match is
+not checked automatically (see Known gaps).
 
 **`assets/site.js`**: builds every `.js-wa` link's `href` from a single
 `WHATSAPP_NUMBER` constant at the top of the file, so the number lives in one
@@ -190,5 +200,9 @@ Tracked in detail in PROJECT.md § "Known gaps":
    nothing keeps them in sync — publishing or selling a bag in the dashboard
    won't update the hand-written markup.
 5. App Check is not configured (Security Rules are).
-6. The Indonesian copy exists twice — in the HTML and in `i18n.js`'s `id`
-   table — and nothing checks that the two still match.
+6. The Indonesian copy exists twice — in the HTML and in `COPY.id` — and
+   nothing checks at runtime that the two still match. `i18n.js` does check
+   that both tables carry the same keys, but only on localhost.
+7. The desktop header has ~39px of slack at 901px (the narrowest width before
+   the mobile breakpoint). Longer nav labels than "Paling Diminati" would
+   overflow rather than wrap.
