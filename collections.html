@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Featured Collections — Curated By Mami L</title>
-<meta name="description" content="Three ways to carry the day. Pick a silhouette, then browse everything available in that style.">
+<title data-i18n="coll.pageTitle">Koleksi Pilihan — Curated By Mami L</title>
+<meta name="description" content="Tiga cara membawa hari Anda. Pilih siluetnya, lalu jelajahi semua yang tersedia dalam gaya itu." data-i18n-attr="content:coll.lede">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -50,53 +50,58 @@
   }
 </style>
 </head>
-<body data-wa-message="Hello Curated By Mami L, I'd like help choosing a bag from your collections.">
+<body data-wa-message="Halo Curated By Mami L, saya ingin dibantu memilih tas dari koleksi Anda." data-i18n-attr="data-wa-message:coll.wa">
 
   <header class="header">
-    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — home">
+    <a class="header__logo" href="index.html" aria-label="Curated By Mami L — beranda" data-i18n-attr="aria-label:brand.homeAria">
       <img src="assets/logo.png" alt="Curated By Mami L">
     </a>
-    <nav class="nav" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="collections.html" aria-current="page">Collections</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="about.html">About</a>
+    <nav class="nav" aria-label="Navigasi utama" data-i18n-attr="aria-label:nav.main">
+      <a href="index.html" data-i18n="nav.home">Beranda</a>
+      <a href="collections.html" aria-current="page" data-i18n="nav.collections">Koleksi</a>
+      <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
+
+    <div class="lang js-lang" role="group" aria-label="Pilih bahasa" data-i18n-attr="aria-label:lang.aria">
+      <button class="lang__btn" type="button" data-lang="id" aria-pressed="true">ID</button>
+      <button class="lang__btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
   </header>
 
   <main>
     <section class="page-head">
-      <h1>Featured Collections</h1>
-      <p>Three ways to carry the day. Pick a silhouette, then browse everything available in that style.</p>
+      <h1 data-i18n="coll.h1">Koleksi Pilihan</h1>
+      <p data-i18n="coll.lede">Tiga cara membawa hari Anda. Pilih siluetnya, lalu jelajahi semua yang tersedia dalam gaya itu.</p>
     </section>
 
     <section class="collections">
       <div class="collections__grid">
         <article class="collection-card">
-          <div class="image-slot">Totes collection photo</div>
+          <div class="image-slot" data-i18n="slot.totes">Foto koleksi Tote</div>
           <div class="collection-card__body">
-            <div class="collection-card__title">Totes</div>
-            <p>Roomy, structured, built for long days.</p>
-            <a class="btn-outline" href="catalog.html">View Totes</a>
+            <div class="collection-card__title" data-i18n="cat.totes">Tote</div>
+            <p data-i18n="coll.totes.p">Lapang, terstruktur, dibuat untuk hari yang panjang.</p>
+            <a class="btn-outline" href="catalog.html" data-i18n="coll.totes.cta">Lihat Tote</a>
           </div>
         </article>
 
         <article class="collection-card">
-          <div class="image-slot">Crossbody collection photo</div>
+          <div class="image-slot" data-i18n="slot.crossbody">Foto koleksi Selempang</div>
           <div class="collection-card__body">
-            <div class="collection-card__title">Crossbody</div>
-            <p>Hands free, softly worn, easy to dress up.</p>
-            <a class="btn-outline" href="catalog.html">View Crossbody</a>
+            <div class="collection-card__title" data-i18n="cat.crossbody">Selempang</div>
+            <p data-i18n="coll.crossbody.p">Bebas genggam, jatuh lembut, mudah dipadupadankan.</p>
+            <a class="btn-outline" href="catalog.html" data-i18n="coll.crossbody.cta">Lihat Selempang</a>
           </div>
         </article>
 
         <article class="collection-card">
-          <div class="image-slot">Clutches collection photo</div>
+          <div class="image-slot" data-i18n="slot.clutch">Foto koleksi Clutch</div>
           <div class="collection-card__body">
-            <div class="collection-card__title">Clutches</div>
-            <p>Evening pieces, small and deliberate.</p>
-            <a class="btn-outline" href="catalog.html">View Clutches</a>
+            <div class="collection-card__title" data-i18n="cat.clutch">Clutch</div>
+            <p data-i18n="coll.clutch.p">Pilihan untuk malam hari, mungil dan penuh pertimbangan.</p>
+            <a class="btn-outline" href="catalog.html" data-i18n="coll.clutch.cta">Lihat Clutch</a>
           </div>
         </article>
       </div>
@@ -104,22 +109,23 @@
   </main>
 
   <footer class="footer">
-    <h2>Not sure which suits you?</h2>
-    <p class="footer__lede">Message us and we'll help you choose.</p>
-    <a class="btn-gold js-wa" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
-    <nav class="footer__nav" aria-label="Footer">
-      <a href="index.html">Home</a>
-      <a href="collections.html">Collections</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="best-sellers.html">Best Sellers</a>
-      <a href="about.html">About</a>
+    <h2 data-i18n="coll.footer.h2">Belum yakin yang mana?</h2>
+    <p class="footer__lede" data-i18n="coll.footer.p">Kirim pesan dan kami bantu memilihkan.</p>
+    <a class="btn-gold js-wa" href="#" target="_blank" rel="noopener" data-i18n="cta.waChat">Chat di WhatsApp</a>
+    <nav class="footer__nav" aria-label="Navigasi footer" data-i18n-attr="aria-label:nav.footer">
+      <a href="index.html" data-i18n="nav.home">Beranda</a>
+      <a href="collections.html" data-i18n="nav.collections">Koleksi</a>
+      <a href="catalog.html" data-i18n="nav.catalog">Katalog</a>
+      <a href="best-sellers.html" data-i18n="nav.best">Terlaris</a>
+      <a href="about.html" data-i18n="nav.about">Tentang</a>
     </nav>
-    <div class="footer__legal">© 2026 Curated By Mami L. All rights reserved.</div>
+    <div class="footer__legal" data-i18n="footer.legal">© 2026 Curated By Mami L. Hak cipta dilindungi.</div>
   </footer>
 
-  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener">Chat with us</a>
+  <a class="chat-pill js-wa" href="#" target="_blank" rel="noopener" data-i18n="chat.pill">Chat dengan kami</a>
 
 <script type="module" src="assets/firebase.js"></script>
+<script src="assets/i18n.js"></script>
 <script src="assets/site.js"></script>
 <script type="module" src="assets/shop-live.js"></script>
 </body>

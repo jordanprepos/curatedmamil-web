@@ -36,6 +36,7 @@ python3 -m http.server 8000
 | `best-sellers.html` | `Best Sellers.dc.html` |
 | `about.html` | `About.dc.html` |
 | `assets/site.css` | shared chrome — tokens, header, page header, footer, buttons, image slots, How to Order, chat pill |
+| `assets/i18n.js` | Indonesian/English switch — Indonesian is the markup, English the dictionary |
 | `assets/site.js` | builds every `wa.me` link from one number, and normalises it |
 | `assets/catalog.js` | catalog search, category filter, save hearts |
 | `assets/firebase.js` | Firebase app + Analytics init (modular SDK from the CDN) |

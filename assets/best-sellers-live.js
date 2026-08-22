@@ -11,6 +11,10 @@
    becomes a real selection: add where("bestSeller", "==", true) to
    the query below (two equality filters need no composite index).
 
+   Card text is stamped with i18n keys rather than written out, so
+   a live card follows the header's language switch just like the
+   hand-written markup does.
+
    The hand-written markup in best-sellers.html stays as the no-JS
    fallback and is only replaced once at least one live bag comes
    back, so a network failure leaves the page as it was.
@@ -26,6 +30,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const PUBLISHED_STATUS = "Aktif";
+
+/* i18n.js loads before this file, but the optional call keeps a missing
+   dictionary from taking the whole grid down — the same defensive idiom as
+   the window.CBML?. calls at the end of the render. */
+function t(key, vars) {
+  return window.CBML?.t ? window.CBML.t(key, vars) : key;
+}
 
 /* The design lays this page out as three across. */
 const MAX_CARDS = 3;
@@ -99,13 +110,13 @@ function buildCard(bag) {
   order.href = "#";
   order.target = "_blank";
   order.rel = "noopener";
-  order.dataset.waMessage =
-    "Hello Curated By Mami L, I'd like to order the " +
-    bag.name +
-    " (" +
-    bag.price +
-    "). Is it still available?";
-  order.textContent = "Order on WhatsApp";
+  order.dataset.waMessage = t("product.wa", { name: bag.name, price: bag.price });
+  order.textContent = t("product.order");
+  // Re-filled by applyI18n() on a language switch, so no re-render is needed.
+  order.dataset.i18n = "product.order";
+  order.dataset.i18nAttr = "data-wa-message:product.wa";
+  order.dataset.i18nVarName = bag.name;
+  order.dataset.i18nVarPrice = bag.price;
 
   body.append(name, price, order);
   article.append(slot, body);
@@ -149,7 +160,8 @@ async function loadBestSellers() {
 
   grid.replaceChildren(...bags.map(buildCard));
 
-  // Give the new nodes their wa.me hrefs.
+  // i18n first — it writes the data-wa-message that wireWaLinks then reads.
+  window.CBML?.applyI18n?.(grid);
   window.CBML?.wireWaLinks(grid);
 
   grid.dataset.source = "firestore";

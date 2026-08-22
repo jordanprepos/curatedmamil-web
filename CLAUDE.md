@@ -38,6 +38,9 @@ project (see README.md table). Every page:
   ties on specificity, so page-specific CSS never needs `!important`.
 - repeats the same header/nav/footer markup (no templating exists) — the nav's
   `aria-current="page"` attribute is the only per-page diff in that markup.
+- is written in **Indonesian** — the shop's language, and the reason
+  `<html lang="id">`. `assets/i18n.js` holds the English translation and swaps
+  it in; nothing has to run for the default language to be right.
 - sets `<body data-wa-message="…">` — the default prefilled WhatsApp message for
   every `.js-wa` link on that page unless a link overrides it with its own
   `data-wa-message`.
@@ -50,6 +53,21 @@ styled for a specific context, not interchangeable), `.image-slot` placeholders,
 footer, and the floating `.chat-pill`. Responsive breakpoints (900px, 480px) and
 a `prefers-reduced-motion` guard were added on top of the source designs, which
 were fixed-desktop.
+
+**`assets/i18n.js`** (every page, loaded **before** `site.js`): the header's
+`ID` / `EN` switch. Indonesian lives in the markup and English lives in this
+file's dictionary — that way the default costs no work, has no flash of the
+wrong language, and is what a no-JS visitor sees. First visit is always
+Indonesian: `navigator.language` is deliberately ignored and only an explicit
+choice, remembered in `localStorage` under `cbml-lang`, overrides it.
+
+Nodes are marked with `data-i18n="key"` (text), `data-i18n-attr="attr:key;…"`
+(attributes) and `data-i18n-var-name="…"` (fills `{name}`). Attributes include
+`data-wa-message`, which is how the prefilled WhatsApp text follows the
+language — and why `applyI18n()` must always run **before** `wireWaLinks()`.
+Exposes `window.CBML.t / .applyI18n / .setLanguage / .getLanguage`. When adding
+a string, add it to both the `id` and `en` tables and keep the `id` value
+identical to the HTML, or switching to English and back reworks the page.
 
 **`assets/site.js`**: builds every `.js-wa` link's `href` from a single
 `WHATSAPP_NUMBER` constant at the top of the file, so the number lives in one
@@ -94,6 +112,12 @@ the dashboard's Indonesian categories (Tote/Selempang/Bahu/Clutch) onto the
 site's filter labels and formats the integer `price` as rupiah. Cards are built
 with `createElement`/`textContent`, never `innerHTML`, since the values come
 from the database.
+
+Cards are stamped with i18n keys rather than finished text, so a live bag
+follows the language switch like the hand-written markup does; `applyI18n(grid)`
+runs just before `wireWaLinks(grid)` because the first writes the
+`data-wa-message` the second reads. `data-cat` and `CATEGORY_LABELS` keep their
+English values — those are matching keys for `catalog.js`, not labels.
 
 Photos come from two fields that are **read together, never concatenated**:
 `imageUrls` (the whole gallery, cover first) wins when present, and `imageUrl`
@@ -166,3 +190,5 @@ Tracked in detail in PROJECT.md § "Known gaps":
    nothing keeps them in sync — publishing or selling a bag in the dashboard
    won't update the hand-written markup.
 5. App Check is not configured (Security Rules are).
+6. The Indonesian copy exists twice — in the HTML and in `i18n.js`'s `id`
+   table — and nothing checks that the two still match.

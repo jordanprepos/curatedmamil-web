@@ -7,6 +7,12 @@
    which is why the query below MUST keep its status filter — drop
    it and Firestore rejects the whole read.
 
+   Every string these cards carry is stamped on as an i18n key
+   rather than written out, so a card built here follows the
+   header's language switch exactly like the hand-written markup
+   does. window.CBML.t() gives the first render its text; the
+   applyI18n() pass below re-fills it on every later switch.
+
    The hand-written product markup in catalog.html stays as the
    no-JS fallback. It is only replaced once at least one live bag
    comes back, so a network failure or an empty result leaves the
@@ -22,8 +28,9 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-/* The dashboard stores categories in Indonesian; the site's filter
-   buttons are English. Anything unmapped falls back to its raw value. */
+/* The dashboard stores categories in Indonesian; the site's filter buttons
+   match on the English key in their data-cat (their visible label is
+   translated, the key is not). Anything unmapped falls back to its raw value. */
 const CATEGORY_LABELS = {
   Tote: "Totes",
   Selempang: "Crossbody",
@@ -32,6 +39,21 @@ const CATEGORY_LABELS = {
 };
 
 const PUBLISHED_STATUS = "Aktif";
+
+/* i18n.js loads before this file on every page that uses it, but the optional
+   call keeps a missing dictionary from taking the whole grid down — same
+   defensive idiom as the window.CBML?. calls at the end of the render. */
+function t(key, vars) {
+  return window.CBML?.t ? window.CBML.t(key, vars) : key;
+}
+
+/* Marks a node for re-translation, so the language switch can re-fill it
+   without this file having to re-render the grid. */
+function i18n(el, spec, vars) {
+  if (spec.text) el.dataset.i18n = spec.text;
+  if (spec.attrs) el.dataset.i18nAttr = spec.attrs;
+  for (const name in vars || {}) el.dataset["i18nVar" + name[0].toUpperCase() + name.slice(1)] = vars[name];
+}
 
 /* Matches MAX_PHOTOS in the dashboard's "Tambah" screen. Nothing in Firestore
    or the Security Rules enforces that ceiling, so it is re-applied here rather
@@ -98,9 +120,13 @@ function buildPhoto(bag, index) {
   img.src = bag.photos[index];
   /* The first photo is the bag; the rest are the same bag from another angle,
      so they are numbered rather than repeating the name verbatim. */
-  img.alt = index === 0
-    ? bag.name
-    : bag.name + " — photo " + (index + 1) + " of " + bag.photos.length;
+  if (index === 0) {
+    img.alt = bag.name;
+  } else {
+    const vars = { name: bag.name, n: index + 1, m: bag.photos.length };
+    img.alt = t("gallery.alt", vars);
+    i18n(img, { attrs: "alt:gallery.alt" }, vars);
+  }
   /* Defers photos on cards below the fold. It does not defer the other slides
      of a gallery: they are stacked on top of each other, so once the card is on
      screen every one of them is in the viewport and fetches. Fine at this shop's
@@ -132,7 +158,8 @@ function buildMedia(bag) {
   gallery.className = "gallery";
   gallery.dataset.index = "0";
   gallery.setAttribute("role", "group");
-  gallery.setAttribute("aria-label", "Photos of " + bag.name);
+  gallery.setAttribute("aria-label", t("gallery.group", { name: bag.name }));
+  i18n(gallery, { attrs: "aria-label:gallery.group" }, { name: bag.name });
 
   const dots = document.createElement("div");
   dots.className = "gallery__dots";
@@ -147,26 +174,29 @@ function buildMedia(bag) {
     dot.className = "gallery__dot";
     dot.type = "button";
     dot.dataset.goto = String(i);
-    dot.setAttribute("aria-label", "Photo " + (i + 1) + " of " + bag.photos.length);
+    const dotVars = { n: i + 1, m: bag.photos.length };
+    dot.setAttribute("aria-label", t("gallery.dot", dotVars));
+    i18n(dot, { attrs: "aria-label:gallery.dot" }, dotVars);
     if (i === 0) dot.setAttribute("aria-current", "true");
     dots.append(dot);
   });
 
   gallery.append(
-    buildNav("prev", "Previous photo of " + bag.name, "‹"),
-    buildNav("next", "Next photo of " + bag.name, "›"),
+    buildNav("prev", "gallery.prev", bag.name, "‹"),
+    buildNav("next", "gallery.next", bag.name, "›"),
     dots
   );
 
   return gallery;
 }
 
-function buildNav(direction, label, glyph) {
+function buildNav(direction, labelKey, name, glyph) {
   const btn = document.createElement("button");
   btn.className = "gallery__nav gallery__nav--" + direction;
   btn.type = "button";
   btn.dataset.step = direction === "prev" ? "-1" : "1";
-  btn.setAttribute("aria-label", label);
+  btn.setAttribute("aria-label", t(labelKey, { name: name }));
+  i18n(btn, { attrs: "aria-label:" + labelKey }, { name: name });
   btn.textContent = glyph;
   return btn;
 }
@@ -186,7 +216,8 @@ function buildCard(bag) {
   fav.className = "product__fav";
   fav.type = "button";
   fav.setAttribute("aria-pressed", "false");
-  fav.setAttribute("aria-label", "Save " + bag.name);
+  fav.setAttribute("aria-label", t("product.save", { name: bag.name }));
+  i18n(fav, { attrs: "aria-label:product.save" }, { name: bag.name });
   fav.textContent = "♥";
 
   // The heart stays last so it keeps painting over the photos.
@@ -208,13 +239,10 @@ function buildCard(bag) {
   order.href = "#";
   order.target = "_blank";
   order.rel = "noopener";
-  order.dataset.waMessage =
-    "Hello Curated By Mami L, I'd like to order the " +
-    bag.name +
-    " (" +
-    bag.price +
-    "). Is it still available?";
-  order.textContent = "Order on WhatsApp";
+  const orderVars = { name: bag.name, price: bag.price };
+  order.dataset.waMessage = t("product.wa", orderVars);
+  order.textContent = t("product.order");
+  i18n(order, { text: "product.order", attrs: "data-wa-message:product.wa" }, orderVars);
 
   body.append(name, price, order);
   article.append(media, body);
@@ -258,7 +286,8 @@ async function loadCatalog() {
 
   grid.replaceChildren(...bags.map(buildCard));
 
-  // Give the new nodes their wa.me hrefs, then re-run any active filter.
+  // i18n first — it writes the data-wa-message that wireWaLinks then reads.
+  window.CBML?.applyI18n?.(grid);
   window.CBML?.wireWaLinks(grid);
   window.CBML?.applyCatalogFilters?.();
 
